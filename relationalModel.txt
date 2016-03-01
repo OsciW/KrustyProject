@@ -1,0 +1,7 @@
+Recipe(_name_)
+RawMaterial(_name_, quantity)
+Pallet(_id_, tid, datum, blocked, recipeName)
+Ingredient(_rawMaterialName_, _recipeName_, quantity)
+Customer(_name_, address)
+Orders(_id_, customerName, orderTime, orderDate, deliveryDate, deliveryTime)
+OrderSpec(_id_, orderId, recipeName, quantity)
