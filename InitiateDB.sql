@@ -26,18 +26,18 @@ CREATE TABLE Pallet(
 	tid time NOT NULL,
 	datum date NOT NULL,
 	blocked boolean default false,
-	RName varchar(20) NOT NULL,
-	FOREIGN KEY(RName) REFERENCES Recipe(name)
+	rName varchar(20) NOT NULL,
+	FOREIGN KEY(rName) REFERENCES Recipe(name)
 );
 
 CREATE TABLE Ingredient(
-	id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
 	rawName varchar(30) NOT NULL,
 	quantity double NOT NULL,
-	RName varchar(20) NOT NULL,
-	FOREIGN KEY(RName) REFERENCES Recipe(name),
+	rName varchar(20) NOT NULL,
+	PRIMARY KEY(rName, rawName),
+	FOREIGN KEY(rName) REFERENCES Recipe(name),
 	FOREIGN KEY(rawName) REFERENCES RawMaterial(name),
-	CONSTRAINT cons UNIQUE (RName,rawName)
+	CONSTRAINT cons UNIQUE (rName,rawName)
 );
 
 CREATE TABLE Customer(
@@ -49,19 +49,21 @@ CREATE TABLE Customer(
 CREATE TABLE Orders(
 	id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
 	CName varchar(20) NOT NULL,
-	tid time NOT NULL,
-	datum date NOT NULL,
+	orderTime time NOT NULL,
+	orderDate date NOT NULL,
+	deliveryDate date NOT NULL,
+	deliveryTime time,
 	FOREIGN KEY(CName) REFERENCES Customer(name)
 );
 
 CREATE TABLE OrderSpec(
 	id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
 	orderId int NOT NULL,
-	RName varchar(20) NOT NULL,
+	rName varchar(20) NOT NULL,
 	quantity int NOT NULL,
-	FOREIGN KEY(RName) REFERENCES Recipe(name),
+	FOREIGN KEY(rName) REFERENCES Recipe(name),
 	FOREIGN KEY(orderId) REFERENCES Orders(id),
-	CONSTRAINT cons UNIQUE (RName, orderId)
+	CONSTRAINT cons UNIQUE (rName, orderId)
  );
 
 set FOREIGN_KEY_CHECKS = 1;
@@ -111,7 +113,7 @@ INSERT INTO RawMaterial(name, quantity) VALUES
 ('Vanilla sugar', 100000);
 
 -- Create Recipe ingredients --
-INSERT INTO Ingredient(rawName, quantity, RName) VALUES
+INSERT INTO Ingredient(rawName, quantity, rName) VALUES
 ('Flour', 450, 'Nut ring'),
 ('Butter', 450, 'Nut ring'),
 
@@ -128,7 +130,7 @@ INSERT INTO Ingredient(rawName, quantity, RName) VALUES
 ('Butter', 250, 'Amneris'),
 ('Eggs', 250, 'Amneris');
 
-INSERT INTO Ingredient(rawName, quantity, RName) VALUES
+INSERT INTO Ingredient(rawName, quantity, rName) VALUES
 ('Potato starch', 25, 'Amneris'),
 ('Wheat flour', 25, 'Amneris'),
 ('Butter', 200, 'Tango'),
