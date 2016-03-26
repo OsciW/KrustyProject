@@ -3,15 +3,15 @@ Relational Model. Primary keys are with a ”_” before and after the attribute
 
 Customer(_name_, address)
 
-Orders(_id_, orderTime, orderDate, deliveryDate, deliveryTime, customerName_)
+Orders(_id_, createdTime, createdDate, deliveryDate, deliveryTime, customerName_)
 OrderStatus(_name_)
 OrderStatusEvent(_id_, createdTime, createdDate, orderId_, statusName_)
 
-Pallet(_id_, barcode_id, createTime, createDate, blocked, recipeName_)
+Pallet(_id_, barcode_id, createdTime, createdDate, blocked, recipeName_)
 OrderSpec(_id_, quantity, orderId_, recipeName_)
 OrderPallet(palletId_, orderId_)
 
 Recipe(_name_)
-Ingredient(_rawMaterialName_, quantity, recipeName_)
-RawMaterial(_name_, unit)
-StockEvent(_id_, quantity, createTime, createDate, rawmaterialName_)
+Ingredient(_id_, quantity, rawMaterialName_, recipeName_)
+RawMaterial(_name_, quantityStock, unit)
+StockEvent(_id_, quantity, createdTime, createdDate, rawmaterialName_)
