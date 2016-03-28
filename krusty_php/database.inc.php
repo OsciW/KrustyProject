@@ -157,6 +157,44 @@ class Database {
 		return $res;
 	}
 
+	public function createPallet($barcodeId, $time, $date, $status, $recipe) {
+		if($status == "Blocked") {
+			$status = true;
+		} else {
+			$status = false;
+		}
+
+
+		$this->conn->query("BEGIN");
+		$sql = "insert into Pallet (barcodeId, createdTime, createdDate,". 
+		 		"blocked, recipeName) values ('$barcodeId', '$time','$date'".
+		 		", '$status', '$recipe')";
+		try {	
+				$rowChange = $this->executeUpdate($sql);
+			if ($rowChange == 1) {
+				$resNbr = $this->conn->lastInsertId();
+				$this->conn->query("COMMIT");
+				}
+			}
+			catch (PDOException $e) {
+				$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+				die($error);
+			}	
+		return $resNbr;
+	}
+
+
+	public function recipeIngredientsNeeded($recipe) {
+
+		$sql = "select rawMaterialName,quantity from ingredient where recipeName ='$recipe'";
+
+
+
+	}
+
+
+
+
 
 
 	/*

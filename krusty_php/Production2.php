@@ -7,14 +7,14 @@
 	$userType = $_SESSION['userType'];
 	$recipe = $_REQUEST['recipe'];
 	$date = $_REQUEST['date'];
-	$quantity = $_REQUEST['quantity'];
+	$time = $_REQUEST['time'];
 	$barcodeId = $_REQUEST['barcodeId'];
 	$status = $_REQUEST['status'];
 
 
 
 	$db->openConnection();
-	$Recipies = $db->getRecipe();
+	$resNbr = $db->createPallet($barcodeId, $time, $date, $status, $recipe);
 	$db->closeConnection();
 
 ?>
@@ -38,6 +38,13 @@ Current user: <?php print $userId ?>
 	<p>
 	Status: <?php print $status ?>
 	<p>
+	Recipe: <?php print $recipe ?>
+	<p>
+	Pallet Id = <?php print $resNbr ?>
+
+<form method=get action="index.html">
+    <input type=submit value="log out" >
+  </form>
 
 
 
