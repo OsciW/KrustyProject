@@ -1,14 +1,14 @@
 <?php
-	require_once('database.inc.php');
-	
-	session_start();
-	$db = $_SESSION['db'];
-	$userId = $_SESSION['userId'];
-	$userType = $_SESSION['userType'];
+  require_once('database.inc.php');
+  
+  session_start();
+  $db = $_SESSION['db'];
+  $userId = $_SESSION['userId'];
+  $userType = $_SESSION['userType'];
 
-	$db->openConnection();
-	$Recipies = $db->getRecipe();
-	$db->closeConnection();
+  $db->openConnection();
+  $Recipies = $db->getRecipe();
+  $db->closeConnection();
 
 ?>
 
@@ -24,52 +24,69 @@
 Current user: <?php print $userId ?>
 <p>
 <p>
-	Create pallets:
-	<p>
-	barcodeId: <input type="text" name="name" value="<?php echo $barcodeId;?>">
-	<p>
-	Time Created <input type="text" name="time" value="<?php echo $time;?>">
-	<p>
-	date: <input type="text" name="date" value="<?php echo $date;?>">
-	<p>
-	Status:
-	<input type="radio" name="Status"
-	<?php if (isset($status) && $status=="Blocked") echo "checked";?>
-	value="Blocked">Blocked
-	<input type="radio" name="Status"
-	<?php if (isset($Status) && $Status=="ok") echo "checked";?>
-	value="ok">ok
-	<input type="radio" name="Status"
-	<?php if (isset($Status) && $Status=="Other") echo "checked";?>
-	value="Other">Other
-
-		<p>
-		
-			Recipe:
-	<form method=post action="production2.php">
-		<select name="Recipies" size=10>
-		<?php
-			$first = true;
-			foreach ($Recipies as $name) {
-				if ($first) {
-					print "<option selected>";
-					$first = false;
-				} else {
-					print "<option>";
-				}
-				print $name;
-			}
-		?>
-		</select>
-			
-	</form>
 
 
 <form method=get action="production2.php">
-		<input type=submit value="log out" >
+  Create pallets:
+  <p>
+  barcodeId: <input type="text" name="name" value="<?php echo $barcodeId;?>">
+  <p>
+  Time Created <input type="text" name="time" value="<?php echo $time;?>">
+  <p>
+  date: <input type="text" name="date" value="<?php echo $date;?>">
+  <p>
+  Status:
+  <input type="radio" name="status"
+  <?php if (isset($status) && $status=="Blocked") echo "checked";?>
+  value="Blocked">Blocked
+  <input type="radio" name="Status"
+  <?php if (isset($status) && $status=="Ok") echo "checked";?>
+  value="Ok">Ok
+  <input type="radio" name="Status"
+  <?php if (isset($status) && $status=="Other") echo "checked";?>
+  value="Other">Other
 
-	</form>
+    <p>
+    
+      Recipe:
+      <p>
+    <select name="recipe" size=10>
+    <?php
+      $first = true;
+      foreach ($Recipies as $name) {
+        if ($first) {
+          print "<option selected>";
+          $first = false;
+        } else {
+          print "<option>";
+        }
+        print $name;
+      }
+    
+    ?>
+    </select>
+    <p>
+    Quantity: <input type="text" name="quantity" value="<?php echo $quantity;?>">
+  <p>
 
+  	<input type=submit value="Create" >
+  	<?php 
+  	$_SESSION['barcodeId'] = $barcodeId;
+  	$_SESSION['timeCreated'] = $time;
+  	$_SESSION['date'] = $date; 
+  	$_SESSION['status'] = $status;
+  	$_SESSION['recipe'] = $recipe;
+  	$_SESSION['quantity'] = $quantity;
+  	
+  	?>
+   </form>
+<?php print $status ?>
+
+
+<p>
+  <form method=get action="index.html">
+    <input type=submit value="log out" >
+  </form>
 
 </body>
 </html>
