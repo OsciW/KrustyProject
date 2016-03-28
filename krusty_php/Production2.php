@@ -36,7 +36,7 @@ Current user: <?php print $userId ?>
 	<p>
 	Date Created: <?php print $date ?>
 	<p>
-	Free Seats: <?php print $date ?>
+	Status: <?php print $status ?>
 	<p>
 
 
