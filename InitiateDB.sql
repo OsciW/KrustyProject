@@ -1,6 +1,8 @@
 set FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS Customer;
+DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS userType;
 
 DROP TABLE IF EXISTS Orders;
 DROP TABLE IF EXISTS OrderStatus;
@@ -18,7 +20,8 @@ DROP TABLE IF EXISTS StockEvent;
 #Kanske eventuellt lägga till id som primary key om det skulle vara två kunder med samma namn
 CREATE TABLE Customer(
 	name varchar(30) PRIMARY KEY NOT NULL,
-	address varchar(30) NOT NULL
+	address varchar(30) NOT NULL,
+	telephone varchar(30)
 );
 
 CREATE TABLE Orders(
@@ -102,6 +105,18 @@ CREATE TABLE StockEvent(
     FOREIGN KEY(rawMaterialName) REFERENCES RawMaterial(name)
 );
 
+CREATE TABLE users(
+pNbr int PRIMARY KEY NOT NULL,
+name varchar(30) NOT NULL,
+type varchar(30) NOT NULL,
+foreign key (type) references userType(name)
+);
+
+CREATE TABLE userType(
+name varchar(30) PRIMARY KEY NOT NULL
+);
+
+
 
 #-------------------------------------
 
@@ -130,7 +145,7 @@ INSERT INTO Customer(name, address) VALUES
 ('Skånekakor AB', 'Perstorp');
 
 -- Create RawMaterials --
-INSERT INTO RawMaterial(name, quantity, unit) VALUES 
+INSERT INTO RawMaterial(name, quantityStock, unit) VALUES 
 ('Flour', 100000, 'g'),
 ('Butter', 100000, 'g'),
 ('Icing sugar', 100000, 'g'),
@@ -187,6 +202,25 @@ INSERT INTO Ingredient(rawMaterialName, quantity, recipeName) VALUES
 ('Eggs', 50, 'Berliner'),
 ('Vanilla sugar', 5, 'Berliner'),
 ('Chocolate', 50, 'Berliner');
+
+INSERT INTO userType(name) VALUES 
+('OrdersDelivers'),
+('StockManager'),
+('Production'),
+('Customer');
+
+INSERT INTO orderStatus(name) VALUES 
+('Recieved'),
+('Canceled'),
+('Delivered'),
+('Postponed');
+
+INSERT INTO users(pNbr, name, type) VALUES 
+('911010101', 'Oscar', 'Customer'),
+('919231234', 'Cleas', 'Production'),
+('012301231','Per', 'StockManager' ),
+('421341241', 'Henrik', 'OrdersDelivers');
+
 
 commit;
 
