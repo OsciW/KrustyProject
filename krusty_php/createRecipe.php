@@ -22,8 +22,8 @@ Current user: <?php print $userId ?>
 <p>
 
 <form name="createRecipe "id="createRecipe" action="createdRecipe.php">
-  <input type="text" class="input_field_login" name="recipeName" placeholder="Recipe Name"/><br /><br />
-  <table id="materialtable">  
+  <input type="text" name="recipeName" placeholder="Recipe Name"/><br /><br />
+  <table id="ingredientTable">  
     <tr>
       <b>Ingredients</b>
     </tr>

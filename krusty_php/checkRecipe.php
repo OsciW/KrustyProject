@@ -25,7 +25,7 @@
     Current user: <?php print $userId?>
     <p>
 
-    <table id="materialtable">
+    <table id="ingredientTable">
       <tr>
         <td style="background-color: #FFF"><b>Ingredient</b></td>
         <td style="background-color: #FFF"><b>Amount</b></td>
