@@ -19,7 +19,6 @@
 <h1 align="center">Add New Raw Materials</h1>
 
 <form method=get action="addedNewRaw.php">
-  Create pallets:
   <p>
   Name: <input type="text" name="name" placeholder="Flour" value="<?php echo $name;?>">
   <p>
