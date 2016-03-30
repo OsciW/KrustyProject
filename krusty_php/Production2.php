@@ -11,8 +11,6 @@
 	$barcodeId = $_REQUEST['barcodeId'];
 	$status = $_REQUEST['status'];
 
-
-
 	$db->openConnection();
 	$resNbr = $db->createPallet($barcodeId, $time, $date, $status, $recipe);
 	$db->closeConnection();
@@ -38,7 +36,7 @@ print "Current user:   $userId <br/>\n";
 	
 	print "Date Created: $date <br/>\n";
 	
-	print "Status:  $status <br/>\n";
+	print "Blocked:  $status <br/>\n";
 	
 	print "Recipe:   $recipe <br/>\n";
 	

@@ -10,6 +10,11 @@
   $Recipies = $db->getRecipe();
   $db->closeConnection();
 
+  date_default_timezone_set('Europe/Stockholm');
+    $dt = new DateTime();
+    $date = $dt->format('Y-m-d');
+    $time = $dt->format('H:i:s');
+
 ?>
 
 
@@ -31,23 +36,23 @@ Current user: <?php print $userId ?>
   <p>
   barcodeId: <input type="text" name="barcodeId" placeholder="666" value="<?php echo $barcodeId;?>">
   <p>
-  Time Created <input type="text" name="time" placeholder="14:00:00 " value="<?php echo $time;?>">
+  Time Created <input type="text" name="time"  value="<?php echo $time;?>">
 
   <!-- <input placeholder="Date" class="textbox-n" type="text" onfocus="(this.type='date')"  value ="<?php echo $date; ?>"> --> 
   
   <p>
-  date: <input type="text" name="date" placeholder="2013-01-01" value="<?php echo $date;?>">
+  date: <input type="text" name="date" value="<?php echo $date;?>">
   <p>
   Status:
   <input type="radio" name="status"
   <?php if (isset($status) && $status=="Blocked") echo "checked";?>
-  value="Blocked">Blocked
+  value="true">Blocked
   <input type="radio" name="status"
   <?php if (isset($status) && $status=="Ok") echo "checked";?>
-  value="Ok">Ok
+  value="false">Ok
   <input type="radio" name="status"
   <?php if (isset($status) && $status=="Other") echo "checked";?>
-  value="Other">Other
+  value="false">Other
 
     <p>
     
