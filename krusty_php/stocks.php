@@ -10,11 +10,23 @@
 
 <html>
 <head>
-<title>Krusty Kookies</title>
+<title>Krusty Kookies - <?php print $userType ?> </title>
 </head>
 <body>
 
 <h1 align="center"><?php print $userId ?>  <?php print $userType ?></h1>
+
+
+<p>
+<form method=get action="createRecipe.php">
+    <input type=submit value="Manage recipies" >
+  </form>
+
+<p>
+
+<form method=get action="index.html">
+    <input type=submit value="log out" >
+  </form>
 
 </body>
 </html>

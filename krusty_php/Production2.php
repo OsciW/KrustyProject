@@ -32,17 +32,17 @@
 <?php if ($resNbr != 0) {
 
 
-print "Current user:   $userId";
-	print "Barcode Id: $barcodeId \r\n";
-	print "Time Created:  $time \r\n";
+print "Current user:   $userId <br/>\n";
+	print "Barcode Id: $barcodeId <br/>\n";
+	print "Time Created:  $time <br/>\n";
 	
-	print "Date Created: $date \r\n";
+	print "Date Created: $date <br/>\n";
 	
-	print "Status:  $status\r\n";
+	print "Status:  $status <br/>\n";
 	
-	print "Recipe:   $recipe\r\n";
+	print "Recipe:   $recipe <br/>\n";
 	
-	print "Pallet Id:   $resNbr \r\n";
+	print "Pallet Id:   $resNbr ";
 } else {
 
 	print "Not enough rawmaterials, fill stocks first";

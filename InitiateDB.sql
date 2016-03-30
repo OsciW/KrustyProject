@@ -146,25 +146,25 @@ INSERT INTO Customer(name, address) VALUES
 
 -- Create RawMaterials --
 INSERT INTO RawMaterial(name, quantityStock, unit) VALUES 
-('Flour', 100000, 'g'),
-('Butter', 100000, 'g'),
-('Icing sugar', 100000, 'g'),
-('Roasted, chopped nuts', 100000, 'g'),
-('Fine-ground nuts', 100000, 'g'),
-('Ground, roasted nuts', 100000, 'g'),
-('Bread crumbs', 100000, 'g'),
-('Sugar', 100000, 'g'),
-('Egg whites', 100000, 'dl'),
-('Chocolate', 100000, 'g'),
-('Marzipan', 100000, 'g'),
-('Eggs', 100000, 'g'),
-('Potato starch', 100000, 'g'),
-('Wheat flour', 100000, 'g'),
-('Sodium bicarbonate', 100000, 'g'),
-('Vanilla', 100000, 'g'),
-('Chopped almonds', 100000, 'g'),
-('Cinnamon', 100000, 'g'),
-('Vanilla sugar', 100000, 'g');
+('Flour', 1000000, 'g'),
+('Butter', 1000000, 'g'),
+('Icing sugar', 1000000, 'g'),
+('Roasted, chopped nuts', 1000000, 'g'),
+('Fine-ground nuts', 1000000, 'g'),
+('Ground, roasted nuts', 1000000, 'g'),
+('Bread crumbs', 1000000, 'g'),
+('Sugar', 1000000, 'g'),
+('Egg whites', 1000000, 'dl'),
+('Chocolate', 1000000, 'g'),
+('Marzipan', 1000000, 'g'),
+('Eggs', 1000000, 'g'),
+('Potato starch', 1000000, 'g'),
+('Wheat flour', 1000000, 'g'),
+('Sodium bicarbonate', 1000000, 'g'),
+('Vanilla', 1000000, 'g'),
+('Chopped almonds', 1000000, 'g'),
+('Cinnamon', 1000000, 'g'),
+('Vanilla sugar', 1000000, 'g');
 
 -- Create Recipe ingredients --
 INSERT INTO Ingredient(rawMaterialName, quantity, recipeName) VALUES
