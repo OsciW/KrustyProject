@@ -239,33 +239,92 @@ class Database {
 		return false;
 	}
 
+	public function getIngredients($recipe) {
 
-	/*public function getStocks() {
+		$sql = "select i.rawMaterialName, i.quantity, r.unit from ingredient i,rawmaterial r where i.recipeName = '$recipe' AND r.name = i.rawmaterialname ;";
 
-	$sql = "select name, quantity FROM rawmaterial;";
 		try {
+			$res = array();
 			$result = $this->executeQuery($sql);
-			$resN = array();
 			if($result) {
-   				foreach ($result as $row) {
-   					$res[] = $row['name'];
-   					$res[] = $row['quantitystock'];
-   				}
+				foreach($result as $row) {
+					$res[] = $row;
+				}
 			}
-		}
-		catch (PDOException $e) {
+
+		} catch(PDOException $e) {
 			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
 			die($error);
 		}
 		return $res;
 
-	}*/
+	}
+
+	public function getAllIngredients() {
+		$sql = "select distinct rawMaterialName from ingredient;";
+
+		try {
+			$res = array();
+			$result = $this->executeQuery($sql);
+			if($result) {
+				foreach($result as $row) {
+					$res[] = $row['rawMaterialName'];
+				}
+			}
+
+		} catch(PDOException $e) {
+			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $res;
+	}
+
+	public function addRecipe($name) {
+		$sql = "insert into Recipe(name) VALUES ('$name');";
+		try {	
+			$rowChange = $this->executeUpdate($sql);
+			if ($rowChange == 1) {
+				$idNbr = $this->conn->lastInsertId();
+			}
+		} catch (PDOException $e) {			
+			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $idNbr;
+	}
 
 
-	
+	public function insertRecipeIngredient($ingredient, $quantity, $recipe) {
+		if($recipe == "") {
+			return 0;
+		}
 
+		$sql = "insert into ingredient(rawmaterialname, quantity, recipename) VALUES ('$ingredient',$quantity,'$recipe');";
+		try {	
+			$rowChange = $this->executeUpdate($sql);
+			if ($rowChange == 1) {
+				$idNbr = $this->conn->lastInsertId();
+			}
+		} catch (PDOException $e) {			
+			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $idNbr;
+	}
 
-
+	public function deleteRecipe($recipe) {
+		$sql = "delete from recipe where name = '$recipe';";
+		try {	
+			$rowChange = $this->executeUpdate($sql);
+			if ($rowChange == 1) {
+				$idNbr = $this->conn->lastInsertId();
+			}
+		} catch (PDOException $e) {			
+			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $idNbr;
+	}
 
 
 
