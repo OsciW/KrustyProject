@@ -86,7 +86,7 @@ CREATE TABLE Ingredient(
 	quantity double NOT NULL,
 	recipeName varchar(30) NOT NULL,
 	FOREIGN KEY(recipeName) REFERENCES Recipe(name) ON DELETE CASCADE,
-	FOREIGN KEY(rawMaterialName) REFERENCES RawMaterial(name),
+	FOREIGN KEY(rawMaterialName) REFERENCES RawMaterial(name) ON DELETE CASCADE,
 	CONSTRAINT cons UNIQUE (recipeName,rawMaterialName)
 
 );
