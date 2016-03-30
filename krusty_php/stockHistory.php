@@ -7,7 +7,7 @@
 	$userType = $_SESSION['userType'];
 
 	$db->openConnection();
-  $Ingredients = $db->getRawmaterials();
+  $Ingredients = $db->getAllStockEvents();
   $db->closeConnection();
 ?>
 
@@ -18,35 +18,26 @@
   </head>
   <body>
 
-    <h1 align="center"> Rawmaterials </h1>
+    <h1 align="center"> Stock history </h1>
 
     Current user: <?php print $userId?>
     <p>
 
-    <p class="text">
-        <a href="addNewRaw.php">Add new raw material</a>
-    </p>
 
-    <p class="text">
-        <a href="orderMoreRaw.php">Order more raw materials</a>
-    </p>
-
-    <p class="text">
-        <a href="stockHistory.php">Check Stock History</a>
-    </p>
-
-    <table id="rawMaterialTable">
+    <table id="rawMaterialTable" style="border-spacing: 20px">
       <tr>
         <td style="background-color: #FFF"><b>Raw material</b></td>
         <td style="background-color: #FFF"><b>Amount</b></td>
-        <td style="background-color: #FFF"><b>unit</b></td>
+        <td style="background-color: #FFF"><b>Time</b></td>
+        <td style="background-color: #FFF"><b>Date</b></td>
 
       </tr>
       <?php foreach($Ingredients as $ingredient){ ?>
         <tr> 
-          <td><?php echo $ingredient['name']; ?></td>  
-          <td><?php echo $ingredient['quantityStock']; ?></td>
-          <td><?php echo $ingredient['unit']; ?> </td>
+          <td><?php echo $ingredient['rawMaterialName']; ?></td>  
+          <td><?php echo $ingredient['quantity']; ?></td>
+          <td><?php echo $ingredient['createdTime']; ?> </td>
+          <td><?php echo $ingredient['createdDate']; ?> </td>
         </tr>
       <?php } ?>
     </table>
@@ -55,7 +46,7 @@
     <p>
 
   
-    <form method=get action="stocks.php">
+    <form method=get action="stockReview.php">
       <input type=submit value="back" >
     </form>
     <p>
