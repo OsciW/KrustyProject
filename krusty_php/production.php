@@ -71,14 +71,6 @@ Current user: <?php print $userId ?>
   <p>
 
   	<input type=submit value="Create" >
-  	<?php 
-  	$_SESSION['barcodeId'] = $barcodeId;
-  	$_SESSION['time'] = $time;
-  	$_SESSION['date'] = $date; 
-  	$_SESSION['status'] = $status;
-  	$_SESSION['recipe'] = $recipe;
-  	
-  	?>
    </form>
 
 
