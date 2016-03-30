@@ -31,7 +31,10 @@ Current user: <?php print $userId ?>
   <p>
   barcodeId: <input type="text" name="barcodeId" placeholder="666" value="<?php echo $barcodeId;?>">
   <p>
-  Time Created <input type="text" name="time" placeholder="14:30:00" value="<?php echo $time;?>">
+  Time Created <input type="text" name="time" placeholder="14:00:00 " value="<?php echo $time;?>">
+
+  <!-- <input placeholder="Date" class="textbox-n" type="text" onfocus="(this.type='date')"  value ="<?php echo $date; ?>"> --> 
+  
   <p>
   date: <input type="text" name="date" placeholder="2013-01-01" value="<?php echo $date;?>">
   <p>

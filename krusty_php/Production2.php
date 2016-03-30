@@ -28,20 +28,27 @@
 
 <h1 align="center">Production Testing page 2 </h1>
 <p> 
-Current user: <?php print $userId ?>
-	<p>
-	Barcode Id: <?php print $barcodeId ?>
-	<p>
-	Time Created: <?php print $time ?>
-	<p>
-	Date Created: <?php print $date ?>
-	<p>
-	Status: <?php print $status ?>
-	<p>
-	Recipe: <?php print $recipe ?>
-	<p>
-	Pallet Id = <?php print $resNbr ?>
 
+<?php if ($resNbr != 0) {
+
+
+print "Current user:   $userId";
+	print "Barcode Id: $barcodeId \r\n";
+	print "Time Created:  $time \r\n";
+	
+	print "Date Created: $date \r\n";
+	
+	print "Status:  $status\r\n";
+	
+	print "Recipe:   $recipe\r\n";
+	
+	print "Pallet Id:   $resNbr \r\n";
+} else {
+
+	print "Not enough rawmaterials, fill stocks first";
+}
+ ?>
+ 
 <form method=get action="index.html">
     <input type=submit value="log out" >
   </form>

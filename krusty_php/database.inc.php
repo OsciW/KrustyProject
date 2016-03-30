@@ -158,39 +158,113 @@ class Database {
 	}
 
 	public function createPallet($barcodeId, $time, $date, $status, $recipe) {
-		if($status == "Blocked") {
+		if($this->subtractRawmaterial($recipe) == true) {
+			if($status == "Blocked") {
 			$status = true;
-		} else {
-			$status = false;
+			} else {
+				$status = false;
+			}
+			$sql = "insert into Pallet (barcodeId, createdTime, createdDate,". 
+			 		"blocked, recipeName) values ('$barcodeId', '$time','$date'".
+			 		", '$status', '$recipe')";
+			try {	
+				$rowChange = $this->executeUpdate($sql);
+				if ($rowChange == 1) {
+					$resNbr = $this->conn->lastInsertId();
+					}
+				}
+				catch (PDOException $e) {
+					$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+					die($error);
+				}	
+			return $resNbr;
+		} 
+	return 0;
+
+	}
+
+
+	public function checkIngredients($recipe) {
+
+		$sql = "select quantitystock - 54*quantity as q from rawmaterial r, ingredient i where r.name = i.rawmaterialname and i.recipename = '$recipe'";
+
+		try {
+			$result = $this->executeQuery($sql);
+			$res = array();
+			if($result) {
+   				foreach ($result as $row) {
+   					$res[] = $row['q'];
+   				}
+			}
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		for( $i = 0; $i < 4; $i++) {
+			if ($res[$i] < 0) {
+				return false;
+			}
 		}
 
+		return true;
+	}
 
-		$this->conn->query("BEGIN");
-		$sql = "insert into Pallet (barcodeId, createdTime, createdDate,". 
-		 		"blocked, recipeName) values ('$barcodeId', '$time','$date'".
-		 		", '$status', '$recipe')";
-		try {	
+
+
+	public function subtractRawmaterial($recipe) {
+		if ($this->checkIngredients($recipe) == true) {
+
+			$sql = "update rawmaterial r, ingredient i set quantitystock".
+			" = r.quantitystock - 54*i.quantity where r.name = i.rawmaterialname".
+			" and i.recipename = '$recipe'";
+
+			$this->conn->query("BEGIN");
+
+			try {	
 				$rowChange = $this->executeUpdate($sql);
-			if ($rowChange == 1) {
-				$resNbr = $this->conn->lastInsertId();
-				$this->conn->query("COMMIT");
+				if ($rowChange > 0) {
+					$this->conn->query("COMMIT");
+					return true;
+				}
+				else {
+					$this->conn->query("ROLLBACK");
+					return false;		
 				}
 			}
 			catch (PDOException $e) {
 				$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
 				die($error);
 			}	
-		return $resNbr;
+		}
+		return false;
 	}
 
 
-	public function recipeIngredientsNeeded($recipe) {
+	/*public function getStocks() {
 
-		$sql = "select rawMaterialName,quantity from ingredient where recipeName ='$recipe'";
+	$sql = "select name, quantity FROM rawmaterial;";
+		try {
+			$result = $this->executeQuery($sql);
+			$resN = array();
+			if($result) {
+   				foreach ($result as $row) {
+   					$res[] = $row['name'];
+   					$res[] = $row['quantitystock'];
+   				}
+			}
+		}
+		catch (PDOException $e) {
+			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $res;
+
+	}*/
 
 
+	
 
-	}
+
 
 
 
