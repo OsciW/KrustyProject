@@ -326,6 +326,98 @@ class Database {
 		return $idNbr;
 	}
 
+	public function getRawmaterials() {
+		$sql = "select * from rawmaterial;";
+
+		try {
+			$result = $this->executeQuery($sql);
+			$res = array();
+			if($result) {
+   				foreach ($result as $row) {
+   					$res[] = $row;
+   				}
+			}
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+
+		return $res;
+	}
+
+	public function getRawName() {
+		$sql = "select * from rawmaterial;";
+		
+		try {
+			$result = $this->executeQuery($sql);
+			$res = array();
+			if($result) {
+   				foreach ($result as $row) {
+   					$res[] = $row['name'];
+   				}
+			}
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+
+		return $res;
+	}
+	public function insertRawMaterial($name, $quantity) {
+		if($this->createStockEvent($name, $quantity) == true) {
+			$sql ="update rawmaterial set quantityStock = quantityStock + $quantity where name = '$name';";
+			try {	
+				$rowChange = $this->executeUpdate($sql);
+				if ($rowChange == 1) {
+					return true;
+				}
+			} catch (PDOException $e) {			
+				$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+				die($error);
+			}
+		}
+		return false;
+	}
+
+	public function newRawmaterial($name, $quantity, $unit) {
+			$sql = "insert into rawMaterial(name, quantityStock, unit) VALUES ('$name',$quantity,'$unit')";
+
+			try {	
+				$rowChange = $this->executeUpdate($sql);
+				if ($rowChange == 1) {
+					$this->createStockEvent($name, $quantity);
+					return true;
+				} else {
+					return false;
+				}
+			} catch (PDOException $e) {			
+				$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+				die($error);
+			}
+
+		return false;
+	}
+
+	public function createStockEvent($name, $quantity) {
+		date_default_timezone_set('Europe/Stockholm');
+  		$dt = new DateTime();
+		$date = $dt->format('Y-m-d');
+		$time = $dt->format('H:i:s');
+		$sql = "Insert into StockEvent(quantity, createdTime, createdDate, rawMaterialName)".
+		"values ('$quantity', '$time', '$date', '$name')";
+		try {	
+			$rowChange = $this->executeUpdate($sql);
+			if ($rowChange == 1) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (PDOException $e) {			
+			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return false;
+	}
 
 
 

@@ -39,10 +39,19 @@
 		</p>
 
 
+		<p class="text">
+  			<a href="stockReview.php">Review Stocks</a>
+		</p>
+
+
+
+
 		<p>
 
 		<form method=get action="index.html">
     		<input type=submit value="log out" >
   		</form>
+
+
 	</body>
 </html>
