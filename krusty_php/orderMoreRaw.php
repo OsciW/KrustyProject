@@ -43,7 +43,7 @@ Current user: <?php print $userId ?>
 
 
 
-<form method=get action="stockReview.php">
+<form method=get action="stocks.php">
     <input type=submit value="back" >
   </form>
 

@@ -46,7 +46,7 @@
     <p>
 
   
-    <form method=get action="stockReview.php">
+    <form method=get action="stocks.php">
       <input type=submit value="back" >
     </form>
     <p>
