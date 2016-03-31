@@ -515,5 +515,91 @@ class Database {
 
 	}
 
+	public function getAllPallets() {
+		$sql = "select * from pallet";
+		try {
+			$result = $this->executeQuery($sql);
+			$res = array();
+			if($result) {
+   				foreach ($result as $row) {
+   					$res[] = $row;
+   				}
+			}
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+
+		return $res;
+
+
+	}
+	public function getRecipePallet($recipe) {
+		$sql = "select * from pallet where recipeName = '$recipe'";
+		try {
+			$result = $this->executeQuery($sql);
+			$res = array();
+			if($result) {
+   				foreach ($result as $row) {
+   					$res[] = $row;
+   				}
+			}
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $res;
+	}
+		public function getBarcodePallet($barcodeId) {
+		$sql = "select * from pallet where barcodeId = '$barcodeId'";
+		try {
+			$result = $this->executeQuery($sql);
+			$res = array();
+			if($result) {
+   				foreach ($result as $row) {
+   					$res[] = $row;
+   				}
+			}
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $res;
+	}
+
+	public function getPalletBetween($start, $end) {
+		$sql = "select * from pallet where createdDate between '$start' and '$end'";
+		try {
+			$result = $this->executeQuery($sql);
+			$res = array();
+			if($result) {
+   				foreach ($result as $row) {
+   					$res[] = $row;
+   				}
+			}
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $res;
+	}
+
+		public function getPalletBetweenRecipe($recipe, $start, $end) {
+		$sql = "select * from pallet where createdDate between '$start' and '$end' and recipeName = '$recipe'";
+		try {
+			$result = $this->executeQuery($sql);
+			$res = array();
+			if($result) {
+   				foreach ($result as $row) {
+   					$res[] = $row;
+   				}
+			}
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $res;
+	}
+
 }
 ?>

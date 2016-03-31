@@ -46,6 +46,9 @@ print "Current user:   $userId <br/>\n";
 	print "Not enough rawmaterials, fill stocks first";
 }
  ?>
+ <form method=get action="production1.php">
+    <input type=submit value="back" >
+  </form>
  
 <form method=get action="index.html">
     <input type=submit value="log out" >

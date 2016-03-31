@@ -23,7 +23,7 @@
 
 		<h3>Recipes</h3>
 
-		<table id="materialtable">  
+		<table id="recipetable">  
   		<?php foreach($Recipies as $recipe){ ?>
   			<tr> 
  
