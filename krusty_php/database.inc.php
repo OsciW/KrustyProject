@@ -168,7 +168,7 @@ class Database {
 			$rowChange = $this->executeUpdate($sql);
 			if ($rowChange == 1) {
 				$orderId = $this->conn->lastInsertId();
-				#$this->palletRawStock($recipe, $time, $date);
+
 				$i=0;
 				foreach($specs as $orderSpec) {
 					if ($orderSpec[1]>0) {
@@ -180,13 +180,14 @@ class Database {
 					}
 					
 				} 
-				return $orderId;
+				
 			}
 		}
 		catch (PDOException $e) {
 			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
 			die($error);
 		}	
+		return $orderId;
 
 	}
 
@@ -204,6 +205,19 @@ class Database {
 			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
 			die($error);
 		}
+	}
+
+	public function getCustomerAddress($customerName) {
+		$sql = "select address from customer where name='$customerName'";
+
+		try {
+			$result = $this->executeQuery($sql);
+		} 
+		catch(PDOException $e) {
+			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $result[0][0];
 	}
 
 

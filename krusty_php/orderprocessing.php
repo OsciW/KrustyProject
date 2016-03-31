@@ -16,22 +16,19 @@
 	$specs=array();
 	$i=0;
 	foreach ($_POST as $key => $value) {
-		#echo $recipes[$i].": {$value}<br />";
 		$specs[$i]=array($recipes[$i], $value);
-  		#print "{$key}: {$value}<br />";
   		$i++;
 	}
 
 	$db->openConnection();
-	#$customerAddress= $db->getCustomerAddress($userId);
+	$customerAddress= $db->getCustomerAddress($userId);
 	$orderSpec=$db->placeOrder($userId, $time, $date, $specs);
   	$db->closeConnection();
 
-  	echo $orderSpec."</br>";
 
   	echo 'Order confirmation </br></br>';
 	echo 'User: '.$userId."</br>";
-	#echo 'Delivery address: '.$customerAddress."</br>";
+	echo 'Delivery address: '.$customerAddress."</br>";
 
 	echo 'Delivery date: ';
 	echo $date."</br>";
@@ -45,4 +42,17 @@
   		$i++;
 	}
 
+
 ?>
+
+<body>
+<html>
+<p>
+
+
+    <form method=get action="index.html">
+      <input type=submit value="Logout" >
+    </form>
+
+      </body>
+</html>
