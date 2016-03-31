@@ -1,30 +1,14 @@
 <?php
+	require_once('database.inc.php');
 	session_start();
-
-
 	$db = $_SESSION['db'];
 	$userId = $_SESSION['userId'];
 	$userType = $_SESSION['userType'];
 
-
-	require_once('database.inc.php');
-	require_once("mysql_connect_data.inc.php");
-
-	$db = new Database($host, $userName, $password, $database);
 	$db->openConnection();
-	if (!$db->isConnected()) {
-		header("Location: cannotConnect.html");
-		exit();
-	}
-
-	$recipe = $db->getRecipe();
-
-
-
-	$_SESSION['allRecipes']=$recipe;
-	$_SESSION['userId']=$userId;
-	$_SESSION['db']=$db;
-
+  	$Recipies = $db->getRecipe();
+  	$recipe = $db->getRecipe();
+  	$db->closeConnection();
 ?>
 
 
@@ -70,14 +54,14 @@
 		<td align="center"><select name="<?php echo $row; ?>">
     	<option value=0>0</option>
     	<option value=1>1</option>
-    	<option value="2">2</option>
-    	<option value="3">3</option>
-    	<option value="4">4</option>
-    	<option value="5">5</option>
-    	<option value="6">6</option>
-    	<option value="7">7</option>
-    	<option value="8">8</option>
-    	<option value="9">9</option>
+    	<option value=2>2</option>
+    	<option value=3>3</option>
+    	<option value=4>4</option>
+    	<option value=5>5</option>
+    	<option value=6>6</option>
+    	<option value=7>7</option>
+    	<option value=8>8</option>
+    	<option value=9>9</option>
  		 </select></td>
 	</tr>
 <?php
