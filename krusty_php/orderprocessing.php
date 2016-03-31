@@ -1,14 +1,37 @@
 <?php
-
+	require_once('database.inc.php');
 	session_start();
 
+	$db = $_SESSION['db'];
 	$userId = $_SESSION['userId'];
-	echo 'welcome: '.$userId."</br>";
-	
+	$userType = $_SESSION['userType'];
 
-	$date=$_REQUEST['deliveryDate'];
-	$time=$_REQUEST['deliveryTime'];
+	$recipes = $_SESSION['recipes'];
+	$date=$_POST['deliveryDate'];
+	$time=$_POST['deliveryTime'];
 
+	unset($_POST['deliveryDate']);
+	unset($_POST['deliveryTime']);
+
+	$specs=array();
+	$i=0;
+	foreach ($_POST as $key => $value) {
+		#echo $recipes[$i].": {$value}<br />";
+		$specs[$i]=array($recipes[$i], $value);
+  		#print "{$key}: {$value}<br />";
+  		$i++;
+	}
+
+	$db->openConnection();
+	#$customerAddress= $db->getCustomerAddress($userId);
+	$orderSpec=$db->placeOrder($userId, $time, $date, $specs);
+  	$db->closeConnection();
+
+  	echo $orderSpec."</br>";
+
+  	echo 'Order confirmation </br></br>';
+	echo 'User: '.$userId."</br>";
+	#echo 'Delivery address: '.$customerAddress."</br>";
 
 	echo 'Delivery date: ';
 	echo $date."</br>";
@@ -16,33 +39,10 @@
 	echo 'Delivery time: ';
 	echo $time."</br></br>Cookies ordered: </br>";
 
-	$recipes = $_SESSION['allRecipes'];
-
-	unset($_POST['deliveryDate']);
-	unset($_POST['deliveryTime']);
-
-
-	$specs=array();
 	$i=0;
 	foreach ($_POST as $key => $value) {
 		echo $recipes[$i].": {$value}<br />";
-		$specs[$i]=array($recipes[$i], $value);
-  		#print "{$key}: {$value}<br />";
   		$i++;
 	}
-
-
-
-	require_once('database.inc.php');
-	require_once("mysql_connect_data.inc.php");
-
-	$db = new Database($host, $userName, $password, $database);
-	$db->openConnection();
-	if (!$db->isConnected()) {
-		header("Location: cannotConnect.html");
-		exit();
-	}
-	$db->placeOrder($userId, $time, $date, $specs);
-
 
 ?>

@@ -161,19 +161,49 @@ class Database {
 
 
 	public function placeOrder($userId, $deliveryTime, $deliveryDate, $specs) {
-		$sql  = "INSERT INTO orders (customerName, createdTime, createdDate, deliveryDate, deliveryTime)".
+		$sql  = "insert into orders (customerName, createdTime, createdDate, deliveryDate, deliveryTime)".
 			"VALUES ('$userId', curtime(), curdate(), '$deliveryDate', '$deliveryTime')";
 
-		try {
-			$result = $this->executeQuery($sql);
-			echo 'Successfull order placement';
+		try {	
+			$rowChange = $this->executeUpdate($sql);
+			if ($rowChange == 1) {
+				$orderId = $this->conn->lastInsertId();
+				#$this->palletRawStock($recipe, $time, $date);
+				$i=0;
+				foreach($specs as $orderSpec) {
+					if ($orderSpec[1]>0) {
+						$ref=$this->placeOrderSpec($orderId, $orderSpec[0], $orderSpec[1]);
+						if ($ref!=1){
+							return $i;
+						}
+						$i++;
+					}
+					
+				} 
+				return $orderId;
+			}
+		}
+		catch (PDOException $e) {
+			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}	
 
-		} catch(PDOException $e) {
-		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+	}
+
+	public function placeOrderSpec($orderId, $recipeName, $quantity) {
+		$sql= "insert into orderspec(orderId, recipeName, quantity) VALUES".
+		"('$orderId', '$recipeName', '$quantity')";
+
+		try {	
+			$rowChange = $this->executeUpdate($sql);
+			if ($rowChange == 1) {
+				return 1;
+			}
+		}
+		catch (PDOException $e) {
+			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
 			die($error);
 		}
-
-
 	}
 
 

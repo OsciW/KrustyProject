@@ -6,9 +6,10 @@
 	$userType = $_SESSION['userType'];
 
 	$db->openConnection();
-  	$Recipies = $db->getRecipe();
   	$recipe = $db->getRecipe();
   	$db->closeConnection();
+
+  	$_SESSION['recipes'] = $recipe;
 ?>
 
 
@@ -47,11 +48,11 @@
 
 
 <?php
-	foreach ($recipe as $row ) {
+	foreach ($recipe as $name ) {
 ?>
 	<tr>
-		<td> <?php echo $row ?> </td>
-		<td align="center"><select name="<?php echo $row; ?>">
+		<td> <?php echo $name ?> </td>
+		<td align="center"><select name="<?php echo $name; ?>">
     	<option value=0>0</option>
     	<option value=1>1</option>
     	<option value=2>2</option>
