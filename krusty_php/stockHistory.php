@@ -41,6 +41,7 @@
 <input placeholder="End date" name="endDate" type="text" onfocus="(this.type='date')"  value ="<?php echo $endDate; ?>">
 <input type=submit value="check" >
 </form>
+<h3> Delivers <h3>
     <table id="rawMaterialTable" style="border-spacing: 20px">
       <tr>
         <td style="background-color: #FFF"><b>Raw material</b></td>
@@ -49,18 +50,45 @@
         <td style="background-color: #FFF"><b>Date</b></td>
 
       </tr>
-      <?php foreach($Ingredients as $ingredient){ ?>
+      <?php foreach($Ingredients as $ingredient){ 
+        if($ingredient['quantity'] > 0) {?>
         <tr> 
           <td><?php echo $ingredient['rawMaterialName']; ?></td>  
           <td><?php echo $ingredient['quantity']; ?></td>
           <td><?php echo $ingredient['createdTime']; ?> </td>
           <td><?php echo $ingredient['createdDate']; ?> </td>
         </tr>
-      <?php } ?>
+      <?php }
+      } ?>
     </table>
 
     <p>
     <p>
+
+    <h3> Orders <h3>
+    <table id="rawMaterialTable" style="border-spacing: 20px">
+      <tr>
+        <td style="background-color: #FFF"><b>Raw material</b></td>
+        <td style="background-color: #FFF"><b>Amount</b></td>
+        <td style="background-color: #FFF"><b>Time</b></td>
+        <td style="background-color: #FFF"><b>Date</b></td>
+
+      </tr>
+      <?php foreach($Ingredients as $ingredient){ 
+        if($ingredient['quantity'] < 0) {?>
+        <tr> 
+          <td><?php echo $ingredient['rawMaterialName']; ?></td>  
+          <td><?php echo $ingredient['quantity']; ?></td>
+          <td><?php echo $ingredient['createdTime']; ?> </td>
+          <td><?php echo $ingredient['createdDate']; ?> </td>
+        </tr>
+      <?php }
+      } ?>
+    </table>
+
+    <p>
+    <p>
+
 
   
     <form method=get action="stocks.php">
