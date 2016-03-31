@@ -138,6 +138,8 @@ class Database {
 		}
 		return $res; 
 	}
+
+
 	public function getRecipe() {
 		$sql = "select name from recipe";
 
@@ -155,6 +157,22 @@ class Database {
 			die($error);
 		}
 		return $res;
+	}
+
+	public function placeOrder($userId, $deliveryTime, $deliveryDate, $specs) {
+		$sql  = "INSERT INTO orders (customerName, createdTime, createdDate, deliveryDate, deliveryTime)".
+			"VALUES ('$userId', curtime(), curdate(), '$deliveryDate', '$deliveryTime')";
+
+		try {
+			$result = $this->executeQuery($sql);
+			echo 'Successfull order placement';
+
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+
+
 	}
 
 
