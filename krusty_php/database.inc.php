@@ -160,26 +160,16 @@ class Database {
 	public function createPallet($barcodeId, $time, $date, $status, $recipe) {
 	
 		if($this->subtractRawmaterial($recipe) == true) {
-					date_default_timezone_set('Europe/Stockholm');
-  		$dt = new DateTime();
-		$date = $dt->format('Y-m-d');
-		$time = $dt->format('H:i:s');
-
-
-			echo "$recipe";
-
-			
 			$sql = "insert into Pallet (barcodeId, createdTime, createdDate,". 
 			 		"blocked, recipeName) values ($barcodeId, '$time','$date'".
 			 		", $status, '$recipe')";
 			try {	
 
 				$rowChange = $this->executeUpdate($sql);
-				echo "rowChange = $rowChange";
 				if ($rowChange == 1) {
 
 					$resNbr = $this->conn->lastInsertId();
-					$this->palletRawStock($recipe);
+					$this->palletRawStock($recipe, $time, $date);
 					return $resNbr;
 					}
 				}
@@ -217,7 +207,8 @@ class Database {
 		return true;
 	}
 
-	public function palletRawStock($recipe) {
+	public function palletRawStock($recipe, $time, $date) {
+
 
 		$sql = "select r.name, -54*i.quantity as q from rawmaterial r, ingredient i where r.name = i.rawmaterialname and i.recipeName = '$recipe'";
 		try {
@@ -226,7 +217,7 @@ class Database {
 				foreach($result as $row) {
 					$n = $row['name'];
 					$quantity = $row['q'];
-					$this->createStockEvent($n, $quantity);
+					$this->palletStockEvent($time, $n, $quantity, $date);
 				}
 			}
 		} catch (PDOException $e) {
@@ -251,7 +242,6 @@ class Database {
 			try {	
 				$rowChange = $this->executeUpdate($sql);
 				if ($rowChange > 0) {
-					echo "subtract!! $rowChange";
 					$this->conn->query("COMMIT");
 					return true;
 				}
@@ -290,14 +280,14 @@ class Database {
 	}
 
 	public function getAllIngredients() {
-		$sql = "select distinct rawMaterialName from ingredient;";
+		$sql = "select distinct name from rawmaterial;";
 
 		try {
 			$res = array();
 			$result = $this->executeQuery($sql);
 			if($result) {
 				foreach($result as $row) {
-					$res[] = $row['rawMaterialName'];
+					$res[] = $row['name'];
 				}
 			}
 
@@ -447,6 +437,27 @@ class Database {
 		}
 		return false;
 	}
+
+	public function palletStockEvent($time, $name, $quantity, $date) {
+		$sql = "Insert into StockEvent(quantity, createdTime, createdDate, rawMaterialName)".
+		"values ('$quantity', '$time', '$date', '$name')";
+		try {	
+			$rowChange = $this->executeUpdate($sql);
+			if ($rowChange == 1) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (PDOException $e) {			
+			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return false;
+	}
+
+
+
+
 	public function getAllStockEvents() {
 		$sql = "select * from stockevent;";
 		try {
@@ -463,7 +474,24 @@ class Database {
 		}
 
 		return $res;
+	}
+	public function getSelectedStockEvents($start, $end) {
 
+		$sql = "select * from stockevent where createdDate between '$start' and '$end';";
+		try {
+			$result = $this->executeQuery($sql);
+			$res = array();
+			if($result) {
+   				foreach ($result as $row) {
+   					$res[] = $row;
+   				}
+			}
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+
+		return $res;
 
 	}
 
