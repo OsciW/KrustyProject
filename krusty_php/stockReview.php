@@ -7,41 +7,23 @@
 	$userType = $_SESSION['userType'];
 
 	$db->openConnection();
-  	$Recipies = $db->getRecipe();
-  	$Ingredients = $db->getRawmaterials();
-  	$db->closeConnection();
+  $Ingredients = $db->getRawmaterials();
+  $db->closeConnection();
 ?>
 
 
 <html>
-	<head>
-		<title>Krusty Kookies - <?php print $userType ?> </title>
-	</head>
-	<body>
+  <head>
+    <title>Krusty Kookies - <?php print $userType ?> </title>
+  </head>
+  <body>
 
-		<h1 align="center"> Stocks</h1>
+    <h1 align="center"> Rawmaterials </h1>
 
-		<h3>Recipes</h3>
+    Current user: <?php print $userId?>
+    <p>
 
-		<table id="materialtable">  
-  		<?php foreach($Recipies as $recipe){ ?>
-  			<tr> 
- 
-    		<td> <a href="checkRecipe.php?recipe=<?php print $recipe?>">  <?php print $recipe?> </a></td>
-
- 			</tr>
-  		<?php } ?>
-
-		</table>
-
-
-		<h3>Actions</h3>
-		<p class="text">
-  			<a href="createRecipe.php">Create Recipes</a>
-		</p>
-
-
-		 <p class="text">
+    <p class="text">
         <a href="addNewRaw.php">Add new raw material</a>
     </p>
 
@@ -59,8 +41,6 @@
         <td style="background-color: #FFF"><b>Amount</b></td>
         <td style="background-color: #FFF"><b>unit</b></td>
 
-
-		<h3>In Stock</h3>
       </tr>
       <?php foreach($Ingredients as $ingredient){ ?>
         <tr> 
@@ -74,15 +54,15 @@
     <p>
     <p>
 
+  
+    <form method=get action="stocks.php">
+      <input type=submit value="back" >
+    </form>
+    <p>
+    <form method=get action="index.html">
+      <input type=submit value="Logout" >
+    </form>
 
-
-
-		<p>
-
-		<form method=get action="index.html">
-    		<input type=submit value="log out" >
-  		</form>
-
-
-	</body>
+    <p>
+  </body>
 </html>

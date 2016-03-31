@@ -159,6 +159,7 @@ class Database {
 		return $res;
 	}
 
+
 	public function placeOrder($userId, $deliveryTime, $deliveryDate, $specs) {
 		$sql  = "INSERT INTO orders (customerName, createdTime, createdDate, deliveryDate, deliveryTime)".
 			"VALUES ('$userId', curtime(), curdate(), '$deliveryDate', '$deliveryTime')";
@@ -176,13 +177,216 @@ class Database {
 	}
 
 
+	public function createPallet($barcodeId, $time, $date, $status, $recipe) {
+	
+		if($this->subtractRawmaterial($recipe) == true) {
+			$sql = "insert into Pallet (barcodeId, createdTime, createdDate,". 
+			 		"blocked, recipeName) values ($barcodeId, '$time','$date'".
+			 		", $status, '$recipe')";
+			try {	
 
-	/*
-	 * *** Add functions ***
-	 */
+				$rowChange = $this->executeUpdate($sql);
+				if ($rowChange == 1) {
 
-	public function getMovieNames() {
-		$sql = "select name FROM movies";
+					$resNbr = $this->conn->lastInsertId();
+					$this->palletRawStock($recipe, $time, $date);
+					return $resNbr;
+					}
+				}
+				catch (PDOException $e) {
+					$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+					die($error);
+				}	
+			return $resNbr;
+		} 
+	return 0;
+
+	}
+
+
+	public function checkIngredients($recipe) {
+
+		$sql = "select quantitystock - 54*quantity as q from rawmaterial r, ingredient i where r.name = i.rawmaterialname and i.recipename = '$recipe'";
+		try {
+			$result = $this->executeQuery($sql);
+			$res = array();
+			if($result) {
+   				foreach ($result as $row) {
+   					$s = $row['q'];
+   					if($s < 0) {
+   						return false;
+   					}
+
+   				}
+			}
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+
+		return true;
+	}
+
+	public function palletRawStock($recipe, $time, $date) {
+
+
+		$sql = "select r.name, -54*i.quantity as q from rawmaterial r, ingredient i where r.name = i.rawmaterialname and i.recipeName = '$recipe'";
+		try {
+			$result = $this->executeQuery($sql);
+			if($result) {
+				foreach($result as $row) {
+					$n = $row['name'];
+					$quantity = $row['q'];
+					$this->palletStockEvent($time, $n, $quantity, $date);
+				}
+			}
+		} catch (PDOException $e) {
+			$error = "*** Internal error: " .$e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+
+	}
+
+
+
+	public function subtractRawmaterial($recipe) {
+		if ($this->checkIngredients($recipe) == true) {
+
+
+			$sql = "update rawmaterial r, ingredient i set quantitystock".
+			" = r.quantitystock - 54*i.quantity where r.name = i.rawmaterialname".
+			" and i.recipename = '$recipe'";
+
+			$this->conn->query("BEGIN");
+
+			try {	
+				$rowChange = $this->executeUpdate($sql);
+				if ($rowChange > 0) {
+					$this->conn->query("COMMIT");
+					return true;
+				}
+				else {
+					$this->conn->query("ROLLBACK");
+					return false;		
+				}
+			}
+			catch (PDOException $e) {
+				$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+				die($error);
+			}	
+		}
+		return false;
+	}
+
+	public function getIngredients($recipe) {
+
+		$sql = "select i.rawMaterialName, i.quantity, r.unit from ingredient i,rawmaterial r where i.recipeName = '$recipe' AND r.name = i.rawmaterialname ;";
+
+		try {
+			$res = array();
+			$result = $this->executeQuery($sql);
+			if($result) {
+				foreach($result as $row) {
+					$res[] = $row;
+				}
+			}
+
+		} catch(PDOException $e) {
+			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $res;
+
+	}
+
+	public function getAllIngredients() {
+		$sql = "select distinct name from rawmaterial;";
+
+		try {
+			$res = array();
+			$result = $this->executeQuery($sql);
+			if($result) {
+				foreach($result as $row) {
+					$res[] = $row['name'];
+				}
+			}
+
+		} catch(PDOException $e) {
+			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $res;
+	}
+
+	public function addRecipe($name) {
+		$sql = "insert into Recipe(name) VALUES ('$name');";
+		try {	
+			$rowChange = $this->executeUpdate($sql);
+			if ($rowChange == 1) {
+				$idNbr = $this->conn->lastInsertId();
+			}
+		} catch (PDOException $e) {			
+			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $idNbr;
+	}
+
+
+	public function insertRecipeIngredient($ingredient, $quantity, $recipe) {
+		if($recipe == "") {
+			return 0;
+		}
+
+		$sql = "insert into ingredient(rawmaterialname, quantity, recipename) VALUES ('$ingredient',$quantity,'$recipe');";
+		try {	
+			$rowChange = $this->executeUpdate($sql);
+			if ($rowChange == 1) {
+				$idNbr = $this->conn->lastInsertId();
+			}
+		} catch (PDOException $e) {			
+			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $idNbr;
+	}
+
+	public function deleteRecipe($recipe) {
+		$sql = "delete from recipe where name = '$recipe';";
+		try {	
+			$rowChange = $this->executeUpdate($sql);
+			if ($rowChange == 1) {
+				$idNbr = $this->conn->lastInsertId();
+			}
+		} catch (PDOException $e) {			
+			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $idNbr;
+	}
+
+	public function getRawmaterials() {
+		$sql = "select * from rawmaterial;";
+
+		try {
+			$result = $this->executeQuery($sql);
+			$res = array();
+			if($result) {
+   				foreach ($result as $row) {
+   					$res[] = $row;
+   				}
+			}
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+
+		return $res;
+	}
+
+	public function getRawName() {
+		$sql = "select * from rawmaterial;";
+		
 		try {
 			$result = $this->executeQuery($sql);
 			$res = array();
@@ -198,116 +402,118 @@ class Database {
 
 		return $res;
 	}
+	public function insertRawMaterial($name, $quantity) {
+		if($this->createStockEvent($name, $quantity) == true) {
+			$sql ="update rawmaterial set quantityStock = quantityStock + $quantity where name = '$name';";
+			try {	
+				$rowChange = $this->executeUpdate($sql);
+				if ($rowChange == 1) {
+					return true;
+				}
+			} catch (PDOException $e) {			
+				$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+				die($error);
+			}
+		}
+		return false;
+	}
+
+	public function newRawmaterial($name, $quantity, $unit) {
+			$sql = "insert into rawMaterial(name, quantityStock, unit) VALUES ('$name',$quantity,'$unit')";
+
+			try {	
+				$rowChange = $this->executeUpdate($sql);
+				if ($rowChange == 1) {
+					$this->createStockEvent($name, $quantity);
+					return true;
+				} else {
+					return false;
+				}
+			} catch (PDOException $e) {			
+				$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+				die($error);
+			}
+
+		return false;
+	}
+
+	public function createStockEvent($name, $quantity) {
+		date_default_timezone_set('Europe/Stockholm');
+  		$dt = new DateTime();
+		$date = $dt->format('Y-m-d');
+		$time = $dt->format('H:i:s');
+		$sql = "Insert into StockEvent(quantity, createdTime, createdDate, rawMaterialName)".
+		"values ('$quantity', '$time', '$date', '$name')";
+		try {	
+			$rowChange = $this->executeUpdate($sql);
+			if ($rowChange == 1) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (PDOException $e) {			
+			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return false;
+	}
+
+	public function palletStockEvent($time, $name, $quantity, $date) {
+		$sql = "Insert into StockEvent(quantity, createdTime, createdDate, rawMaterialName)".
+		"values ('$quantity', '$time', '$date', '$name')";
+		try {	
+			$rowChange = $this->executeUpdate($sql);
+			if ($rowChange == 1) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (PDOException $e) {			
+			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return false;
+	}
 
 
 
-public function getPerformancesForMovie($movieName) {
-		$sql = "select * FROM performances where performances.movieName = '$movieName'";
+
+	public function getAllStockEvents() {
+		$sql = "select * from stockevent;";
 		try {
 			$result = $this->executeQuery($sql);
 			$res = array();
 			if($result) {
    				foreach ($result as $row) {
-   					$res[] = $row['per_date'];
+   					$res[] = $row;
    				}
 			}
-		}
-		catch (PDOException $e) {
-			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
 			die($error);
 		}
+
 		return $res;
 	}
+	public function getSelectedStockEvents($start, $end) {
 
-public function theatreName($movieName, $date) {
-
-	$sql ="select theatreName from performances where performances.movieName = ".
-			"'$movieName' and performances.per_date = '$date' limit 1";
-	try {
-		$result = $this->executeQuery($sql);
-
-		if($result) {
-			foreach ($result as $res) {
-				$res[] = $row['theatreName'];
-				return $res;
-			}
-		}
-	}
-	catch (PDOException $e) {
-		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
-				die($error);
-	}
-}
-public function freeSeats($movieName, $date) {
-
-$sql =  "select " .
-				"(Select seats " .
-				"from theatres, performances,movies " .
-				"where theatres.name = performances.theatreName and performances.movieName = movies.name and performances.per_date = '$date' and movies.name = '$movieName')" .
-				"-" .
-				"(Select count(resNbr) " .
-				"from Movies,Performances,Reservation " .
-				"where Reservation.performancesId = Performances.id and Performances.movieName = Movies.name and Performances.per_date = '$date' and Movies.name = '$movieName')";
-
-		try {		
-		$result = $this->executeQuery($sql);
-		$freeSeats = 0;
-		if($result) {
-			foreach($result as $res) {
-
-				$freeSeats = (int) $res[0];
-			}
-		}
-	}
-		catch (PDOException $e) {
-			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
-			die($error);
-		}
-		return $freeSeats;
-	}
-
-	public function perId($date, $name) {
-		$sql = "Select id from performances where performances.movieName = '$name' and ".
-				"performances.per_date = '$date' ";
+		$sql = "select * from stockevent where createdDate between '$start' and '$end';";
 		try {
 			$result = $this->executeQuery($sql);
-			$id = 0;
+			$res = array();
 			if($result) {
-				foreach($result as $res) {
-					$id = (int) $res[0];
-
-				}
+   				foreach ($result as $row) {
+   					$res[] = $row;
+   				}
 			}
-		}
-		catch (PDOException $e) {
-			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
 			die($error);
 		}
-		return $id;
+
+		return $res;
+
 	}
 
-	public function reser($user, $date, $name) {
-		$this->conn->query("BEGIN");
-		$nbrSeats = $this->freeSeats($name, $date);
-		$pId = $this->perId($date, $name);
-		if($nbrSeats > 0) {
-			$sql = "insert into reservation (username, performancesId) ".
-					"values ('$user', '$pId')";
-			try {
-					$rowChange = $this->executeUpdate($sql);
-				if ($rowChange == 1) {
-					$resNbr = $this->conn->lastInsertId();
-					$this->conn->query("COMMIT");
-				}
-			}
-			catch (PDOException $e) {
-				$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
-				die($error);
-			}	
-		} else {
-			$this->conn->query("ROLLBACK");
-		}
-		return $resNbr;
-	}
 }
 ?>

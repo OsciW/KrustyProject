@@ -22,10 +22,8 @@
 
 
 	$_SESSION['allRecipes']=$recipe;
-
-	foreach($recipe as $a){
-		echo $a . ', ';
-	}
+	$_SESSION['userId']=$userId;
+	$_SESSION['db']=$db;
 
 ?>
 
@@ -44,7 +42,7 @@
 </p>
 
 
-<form action="orderplaced.php" method="post">
+<form action="orderprocessing.php" method="post">
 
 <table border="0">
 
@@ -69,9 +67,9 @@
 ?>
 	<tr>
 		<td> <?php echo $row ?> </td>
-		<td align="center"><select name="quantity" . <?php $row ?>>
-    	<option value="-">0</option>
-    	<option value="1">1</option>
+		<td align="center"><select name="<?php echo $row; ?>">
+    	<option value=0>0</option>
+    	<option value=1>1</option>
     	<option value="2">2</option>
     	<option value="3">3</option>
     	<option value="4">4</option>

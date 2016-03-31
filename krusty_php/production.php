@@ -10,6 +10,11 @@
   $Recipies = $db->getRecipe();
   $db->closeConnection();
 
+  date_default_timezone_set('Europe/Stockholm');
+    $dt = new DateTime();
+    $date = $dt->format('Y-m-d');
+    $time = $dt->format('H:i:s');
+
 ?>
 
 
@@ -29,22 +34,25 @@ Current user: <?php print $userId ?>
 <form method=get action="production2.php">
   Create pallets:
   <p>
-  barcodeId: <input type="text" name="name" value="<?php echo $barcodeId;?>">
+  barcodeId: <input type="text" name="barcodeId" placeholder="666" value="<?php echo $barcodeId;?>">
   <p>
-  Time Created <input type="text" name="time" value="<?php echo $time;?>">
+  Time Created <input type="text" name="time"  value="<?php echo $time;?>">
+
+  <!-- <input placeholder="Date" class="textbox-n" type="text" onfocus="(this.type='date')"  value ="<?php echo $date; ?>"> --> 
+  
   <p>
   date: <input type="text" name="date" value="<?php echo $date;?>">
   <p>
   Status:
   <input type="radio" name="status"
   <?php if (isset($status) && $status=="Blocked") echo "checked";?>
-  value="Blocked">Blocked
-  <input type="radio" name="Status"
+  value="true">Blocked
+  <input type="radio" name="status"
   <?php if (isset($status) && $status=="Ok") echo "checked";?>
-  value="Ok">Ok
-  <input type="radio" name="Status"
+  value="false">Ok
+  <input type="radio" name="status"
   <?php if (isset($status) && $status=="Other") echo "checked";?>
-  value="Other">Other
+  value="false">Other
 
     <p>
     
@@ -65,22 +73,10 @@ Current user: <?php print $userId ?>
     
     ?>
     </select>
-    <p>
-    Quantity: <input type="text" name="quantity" value="<?php echo $quantity;?>">
   <p>
 
   	<input type=submit value="Create" >
-  	<?php 
-  	$_SESSION['barcodeId'] = $barcodeId;
-  	$_SESSION['timeCreated'] = $time;
-  	$_SESSION['date'] = $date; 
-  	$_SESSION['status'] = $status;
-  	$_SESSION['recipe'] = $recipe;
-  	$_SESSION['quantity'] = $quantity;
-  	
-  	?>
    </form>
-<?php print $status ?>
 
 
 <p>

@@ -2,6 +2,8 @@
 
 	session_start();
 
+	
+
 ?>
 
 <html>
@@ -14,7 +16,7 @@
 
 
 <p class="breadtext">
-		We are happy to extend our partnership
+		Order details:
 	</p>
 
 <?php
@@ -24,23 +26,21 @@
 	$date=$_REQUEST['deliveryDate'];
 	$time=$_REQUEST['deliveryTime'];
 
-	$=$_REQUEST['deliveryTime'];
 
 	echo 'Delivery date: ';
 	echo $date."</br>";
 
 	echo 'Delivery time: ';
-	echo $time."</br>";
-?>
+	echo $time."</br></br>Cookies ordered: </br>";
 
-<?php
 
-	session_start();
+	#$recipes = $_SESSION['allRecipes'];
 
-	$recipes = $_SESSION['allRecipes'];
+	unset($_POST['deliveryDate']);
+	unset($_POST['deliveryTime']);
 
-	foreach($recipes as $r){
-		echo $r . ', ';
+	foreach ($_POST as $key => $value) {
+  		print "{$key}: {$value}<br />";
 	}
 
 ?>

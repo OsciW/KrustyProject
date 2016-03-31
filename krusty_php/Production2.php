@@ -7,14 +7,12 @@
 	$userType = $_SESSION['userType'];
 	$recipe = $_REQUEST['recipe'];
 	$date = $_REQUEST['date'];
-	$quantity = $_REQUEST['quantity'];
+	$time = $_REQUEST['time'];
 	$barcodeId = $_REQUEST['barcodeId'];
 	$status = $_REQUEST['status'];
 
-
-
 	$db->openConnection();
-	$Recipies = $db->getRecipe();
+	$resNbr = $db->createPallet($barcodeId, $time, $date, $status, $recipe);
 	$db->closeConnection();
 
 ?>
@@ -28,16 +26,30 @@
 
 <h1 align="center">Production Testing page 2 </h1>
 <p> 
-Current user: <?php print $userId ?>
-	<p>
-	Barcode Id: <?php print $barcodeId ?>
-	<p>
-	Time Created: <?php print $time ?>
-	<p>
-	Date Created: <?php print $date ?>
-	<p>
-	Free Seats: <?php print $date ?>
-	<p>
+
+<?php if ($resNbr != 0) {
+
+
+print "Current user:   $userId <br/>\n";
+	print "Barcode Id: $barcodeId <br/>\n";
+	print "Time Created:  $time <br/>\n";
+	
+	print "Date Created: $date <br/>\n";
+	
+	print "Blocked:  $status <br/>\n";
+	
+	print "Recipe:   $recipe <br/>\n";
+	
+	print "Pallet Id:   $resNbr ";
+} else {
+
+	print "Not enough rawmaterials, fill stocks first";
+}
+ ?>
+ 
+<form method=get action="index.html">
+    <input type=submit value="log out" >
+  </form>
 
 
 
