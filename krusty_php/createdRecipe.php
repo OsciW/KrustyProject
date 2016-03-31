@@ -24,7 +24,21 @@
 
 
   <?php
-  if($recipe != "") {
+   /* foreach($ingredients as $ingredient){
+    $first = 0;
+   $checkWord = str_replace(" ", "","$ingredient");
+    if(isset($_GET[$checkWord])) { 
+      $quantity = $_GET[$checkWord];
+      $first = $quantity; 
+      if($quantity > 0) {
+        $db->openConnection();
+        $nbr = $db->insertRecipeIngredient($ingredient, $quantity, $recipe);
+        $db->closeConnection();
+      }
+    }
+  }
+  if ($first > 0 && $recipe != "") {*/
+    if ($recipe != "") {
  ?>
   	<h1 align="center">Production Testing page 2 </h1>
 <p> 
@@ -67,10 +81,12 @@ Recipe: <?php print $recipe ?>
 }
 
 		}
+  
 	} else {
+
 ?>
 
-Don't forget to write recipe name
+Don't forget to write recipe name and an ingredient
 <?php
 
 }
