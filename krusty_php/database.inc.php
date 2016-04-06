@@ -169,13 +169,13 @@ class Database {
 			if ($rowChange == 1) {
 				$orderId = $this->conn->lastInsertId();
 
+				$confirmation=array($orderId);
+
 				$i=0;
 				foreach($specs as $orderSpec) {
 					if ($orderSpec[1]>0) {
 						$ref=$this->placeOrderSpec($orderId, $orderSpec[0], $orderSpec[1]);
-						if ($ref!=1){
-							return $i;
-						}
+						$confirmation[$i+1]=$ref;
 						$i++;
 					}
 					
@@ -187,7 +187,7 @@ class Database {
 			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
 			die($error);
 		}	
-		return $orderId;
+		return $confirmation;
 
 	}
 
@@ -198,13 +198,15 @@ class Database {
 		try {	
 			$rowChange = $this->executeUpdate($sql);
 			if ($rowChange == 1) {
-				return 1;
+				return array($recipeName, $quantity);
 			}
 		}
 		catch (PDOException $e) {
 			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
 			die($error);
 		}
+
+		return array($recipeName, $quantity);
 	}
 
 	public function getCustomerAddress($customerName) {
