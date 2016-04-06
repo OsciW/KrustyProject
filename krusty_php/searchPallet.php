@@ -12,6 +12,7 @@
 
 
 	$db->openConnection();
+  $allRecipes = $db->getAllPallets();
 	if ($barcode != "") {
   		$Ingredients = $db->getBarcodePallet($barcode);
 
@@ -43,9 +44,36 @@
 
 <?php } ?>
 
+
+  
+
 <form method get action "searchPallet.php">
-<input placeholder="Recipe Name" name="recipe" type="text"  value ="<?php echo $recipe; ?>">
-<input placeholder="Barcode ID" name="barcode" type="text"  value ="<?php echo $barcode; ?>">
+<tr>
+    <td align="center"><select name="recipe">
+     <option name="sumthing" value="">All Recipes</option>
+    <?php
+  foreach ($allRecipes as $name ) {
+?>
+      <option name="recipe" value="<?php print $name['recipeName'] ?>"><?php print $name['recipeName']?></option>
+    
+<?php
+  }
+?>
+ </select></td>
+  </tr>
+<tr>
+    <td align="center"><select name="barcode">
+     <option name="sumthing" value="">All Barcodes</option>
+    <?php
+  foreach ($allRecipes as $name ) {
+?>
+      <option name="barcode" value="<?php print $name['barcodeId'] ?>"><?php print $name['barcodeId']?></option>
+    
+<?php
+  }
+?>
+ </select></td>
+  </tr>
 <input placeholder="Start date" name="startDate" type="text" onfocus="(this.type='date')"  value ="<?php echo $startDate; ?>">
 <input placeholder="End date" name="endDate" type="text" onfocus="(this.type='date')"  value ="<?php echo $endDate; ?>">
 
