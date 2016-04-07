@@ -9,7 +9,7 @@
 	$customer = $_REQUEST['customer'];
 
 	$db->openConnection();
-	if($customer != null) {
+	if($userType == 'Customer') {
 		$db->createCustUse($userId,$customer);
 	} 
 	$created = $db->createUser($userName, $userType, $userId);
@@ -32,7 +32,7 @@
 		print "SSN: $userId <br/>\n";
 		print "Name: $userName <br/>\n";
 		print "type: $userType <br/>\n";
-		if($customer) {
+		if($userType == 'Customer') {
 			print "customer: $customer<br/>\n";
 		}
 } else {
