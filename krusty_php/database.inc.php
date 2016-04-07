@@ -647,5 +647,59 @@ class Database {
 		return $res;
 	}
 
+	public function getCompanies() {
+		$sql = "select name from Customer";
+		try {
+			$result = $this->executeQuery($sql);
+			$res = array();
+			if($result) {
+   				foreach ($result as $row) {
+   					$res[] = $row['name'];
+   				}
+			}
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $res;
+	}
+	public function createUser($name, $pNbr, $type) {
+		$sql = "Insert into users(pNbr, name , type)".
+		"values ('$pNbr', '$name', '$type')";
+		try {	
+			$rowChange = $this->executeUpdate($sql);
+			if ($rowChange == 1) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (PDOException $e) {			
+			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return false;
+	}
+
+	public function createCustUse($pNbr, $name) {
+		$sql = "Insert into custUser(pNbr, name)".
+		"values ('$pNbr', '$name')";
+		try {	
+			$rowChange = $this->executeUpdate($sql);
+			if ($rowChange == 1) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (PDOException $e) {			
+			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return false;
+	}
+
+
+
+
+
 }
 ?>

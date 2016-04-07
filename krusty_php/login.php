@@ -29,8 +29,11 @@
 	$_SESSION['userId'] = $userId;
 	$_SESSION['userType'] = $userType;
 
+	if ($userType == "superUser") {
+		header("Location: menu.php");
+	}
 
-	if ($userType == "Customer"){
+	else if ($userType == "Customer"){
 		header("Location: Customer.php");
 	}
 	else if ($userType == "Production" ){
