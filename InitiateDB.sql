@@ -62,11 +62,11 @@ CREATE TABLE OrderStatus(
 
 CREATE TABLE OrderStatusEvent(
 	id int PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    createdTime time NOT NULL,
-    createdDate date NOT NULL,
+ /*   createdTime time NOT NULL,
+    createdDate date NOT NULL, */
     orderId int NOT NULL, 
     statusName varchar(30) NOT NULL,
-    FOREIGN KEY(orderId) REFERENCES Orders(id),
+    FOREIGN KEY(orderId) REFERENCES Orders(id) ON DELETE CASCADE,
     FOREIGN KEY(statusName) REFERENCES OrderStatus(name)
 );
 
@@ -86,7 +86,7 @@ CREATE TABLE OrderSpec(
 	recipeName varchar(30) NOT NULL,
 	quantity int NOT NULL,
 	FOREIGN KEY(recipeName) REFERENCES Recipe(name),
-	FOREIGN KEY(orderId) REFERENCES Orders(id),
+	FOREIGN KEY(orderId) REFERENCES Orders(id) ON DELETE CASCADE,
 	CONSTRAINT cons UNIQUE (recipeName, orderId)
  );
 
@@ -250,8 +250,34 @@ INSERT INTO Ingredient(rawMaterialName, quantity, recipeName) VALUES
 INSERT INTO orderStatus(name) VALUES 
 ('Recieved'),
 ('Canceled'),
-('Delivered'),
-('Postponed');
+('Delivered');
+
+
+
+INSERT INTO pallet(barcodeId, createdTime, createdDate, blocked, recipeName) VALUES
+(1, curtime(), curdate(), false, 'Amneris'),
+(2, curtime(), curdate(), false, 'Amneris'),
+(3, curtime(), curdate(), false, 'Amneris'),
+(4, curtime(), curdate(), false, 'Amneris'),
+(5, curtime(), curdate(), false, 'Almond delight'),
+(6, curtime(), curdate(), false, 'Almond delight'),
+(7, curtime(), curdate(), false, 'Almond delight'),
+(8, curtime(), curdate(), false, 'Almond delight'),
+(9, curtime(), curdate(), false, 'Berliner'),
+(10, curtime(), curdate(), false, 'Berliner'),
+(11, curtime(), curdate(), false, 'Berliner'),
+(12, curtime(), curdate(), false, 'Berliner'),
+(13, curtime(), curdate(), false, 'Nut cookie'),
+(14, curtime(), curdate(), false, 'Nut cookie'),
+(15, curtime(), curdate(), false, 'Nut cookie'),
+(16, curtime(), curdate(), false, 'Nut cookie'),
+(17, curtime(), curdate(), false, 'Nut ring'),
+(18, curtime(), curdate(), false, 'Nut ring'),
+(19, curtime(), curdate(), false, 'Nut ring'),
+(20, curtime(), curdate(), false, 'Tango'),
+(21, curtime(), curdate(), false, 'Tango'),
+(22, curtime(), curdate(), false, 'Tango'),
+(23, curtime(), curdate(), false, 'Tango');
 
 
 commit;
