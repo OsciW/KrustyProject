@@ -26,7 +26,7 @@
         <a href="production.php">Production site</a>
     </p>
     <p class="text">
-        <a href="ordesDeliver.php">Orders and deliveries</a>
+        <a href="ordersDeliver.php">Orders and deliveries</a>
     </p>
     <p class="text">
         <a href="stocks.php">Warehouse stocks</a>
