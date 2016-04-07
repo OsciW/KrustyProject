@@ -71,12 +71,6 @@
       <?php } ?>
     </table>
 
-    <p>
-    <p>
-
-
-
-
 		<p>
 
 		<form method=get action="index.html">
