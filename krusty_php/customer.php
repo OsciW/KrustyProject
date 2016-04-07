@@ -7,15 +7,22 @@
 
 	$db->openConnection();
   	$recipe = $db->getRecipe();
+  	$customer = $db->getCompanies();
+  	if($userType == 'Customer') {
+  		$customerName = $db->getUserCustomer($userId);
+  		$customerName = $customerName[0][0];
+  		$_SESSION['customerName'] = $customerName;
+  	}
   	$db->closeConnection();
 
   	$_SESSION['recipes'] = $recipe;
+  	
 ?>
 
 
 <html>
 <head>
-<title>Krusty Kookies - <?php print $userType ?> </title>
+<title>Krusty Kookies - <?php echo $userType ?> </title>
 </head>
 <body>
 
@@ -29,6 +36,33 @@
 
 <form action="orderprocessing.php" method="post">
 
+
+<?php if($userType != 'Customer') { ?>
+<select name="customerName" size=10>
+    <?php
+      $first = true;
+      foreach ($customer as $name) {
+        if ($first) {
+          print "<option selected>";
+          $first = false;
+        } else {
+          print "<option>";
+        }
+        print $name;
+      }
+      $_SESSION['customerName'] = $customerName;
+    ?>
+
+    </select>
+ <?php } else { ?>
+
+ Customer name : <?php print $customerName; ?> 
+
+
+
+ <?php } ?> 
+
+
 <table border="0">
 
 <tr>
@@ -38,7 +72,7 @@
 	
 <tr>
 	<td>Delivery time</td>
-	<td align="center"><input type="date" name="deliveryTime" size="30" placeholder="HH:MM:SS"/></td>
+	<td align="center"><input type="text" name="deliveryTime" size="30" placeholder="HH:MM:SS"/></td>
 </tr>
 
 <tr>
@@ -68,6 +102,8 @@
 <?php
 	}
 ?>
+
+
 
 
 <tr>
