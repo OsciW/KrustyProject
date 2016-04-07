@@ -663,7 +663,7 @@ class Database {
 		}
 		return $res;
 	}
-	public function createUser($name, $pNbr, $type) {
+	public function createUser($name, $type, $pNbr) {
 		$sql = "Insert into users(pNbr, name , type)".
 		"values ('$pNbr', '$name', '$type')";
 		try {	

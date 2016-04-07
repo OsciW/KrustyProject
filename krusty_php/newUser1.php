@@ -12,7 +12,7 @@
 	if($customer != null) {
 		$db->createCustUse($userId,$customer);
 	} 
-	$db->createUser($userName, $userType, $userId);
+	$created = $db->createUser($userName, $userType, $userId);
 	$db->closeConnection();
 
 ?>
@@ -24,29 +24,23 @@
 </head>
 <body>
 
-<h1 align="center">Production Testing page 2 </h1>
+<h1 align="center">Created user </h1>
 <p> 
 
-<?php if ($resNbr != 0) {
+<?php if ($created) {
 
-
-	print "Current user:   $userId <br/>\n";
-	print "Barcode Id: $barcodeId <br/>\n";
-	print "Time Created:  $time <br/>\n";
-	
-	print "Date Created: $date <br/>\n";
-	
-	print "Blocked:  $status <br/>\n";
-	
-	print "Recipe:   $recipe <br/>\n";
-	
-	print "Pallet Id:   $resNbr ";
+		print "SSN: $userId <br/>\n";
+		print "Name: $userName <br/>\n";
+		print "type: $userType <br/>\n";
+		if($customer) {
+			print "customer: $customer<br/>\n";
+		}
 } else {
 
-	print "Not enough rawmaterials, fill stocks first";
+	print "Sorry, wrongly filled information, or user already exists";
 }
  ?>
- <form method=get action="production1.php">
+ <form method=get action="newUser.php">
     <input type=submit value="back" >
   </form>
  
