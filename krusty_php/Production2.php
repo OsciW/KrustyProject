@@ -18,6 +18,7 @@
 ?>
 
 
+
 <html>
 <head>
 <title>Krusty Kookies <?php print $userType?> </title>

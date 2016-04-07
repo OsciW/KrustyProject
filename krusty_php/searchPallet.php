@@ -9,10 +9,16 @@
   	$end = $_GET['endDate'];
   	$recipe = $_GET['recipe'];
   	$barcode = $_GET['barcode'];
+    $id = $_GET['id'];
+    $action = $_GET['action'];
 
 
 	$db->openConnection();
   $allRecipes = $db->getAllPallets();
+  $allRecipeNames = $db->getAllpRep();
+  
+    $db->palletAction($id, $action);
+  
 	if ($barcode != "") {
   		$Ingredients = $db->getBarcodePallet($barcode);
 
@@ -26,6 +32,7 @@
   		$Ingredients = $db->getAllPallets();
 	}
   	$db->closeConnection();
+    header( "searchPallet.php");
 ?>
 
 
@@ -52,7 +59,7 @@
     <td align="center"><select name="recipe">
      <option name="sumthing" value="">All Recipes</option>
     <?php
-  foreach ($allRecipes as $name ) {
+  foreach ($allRecipeNames as $name ) {
 ?>
       <option name="recipe" value="<?php print $name['recipeName'] ?>"><?php print $name['recipeName']?></option>
     
@@ -87,6 +94,9 @@
         <td style="background-color: #FFF"><b>Barcode ID</b></td>
         <td style="background-color: #FFF"><b>Time</b></td>
         <td style="background-color: #FFF"><b>Date</b></td>
+        <td style="background-color: #FFF"><b>Blocked</b></td>
+        <td style="background-color: #FFF"><b>Change Status</b></td>
+        
 
       </tr>
       <?php foreach($Ingredients as $ingredient){ ?>
@@ -95,6 +105,12 @@
           <td><?php echo $ingredient['barcodeId']; ?></td>
           <td><?php echo $ingredient['createdTime']; ?> </td>
           <td><?php echo $ingredient['createdDate']; ?> </td>
+          <td><?php if($ingredient['blocked']) { echo "Blocked";} else { echo "Not Blocked" ;} ?> </td>
+          <td><form method=get action="searchPallet.php">
+            <input type="hidden" name="id" value="<?php echo $ingredient['id']; ?>" >
+      <input type=submit name= "action" value="<?php if($ingredient['blocked']) { echo "Unblock";} else { echo "Block" ;} ?>" >
+    </form></td>
+          
         </tr>
       <?php 
       } ?>
