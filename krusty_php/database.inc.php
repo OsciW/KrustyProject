@@ -159,6 +159,29 @@ class Database {
 		return $res;
 	}
 
+	public function getUserCustomer($userName) {
+
+		$sql = "select c.name from custUser c where c.pNbr in (select pNbr from users where name ='$userName')";
+		try {
+
+			$result = $this->executeQuery($sql);
+			$res = array();
+			if($result) {
+   				foreach ($result as $row) {
+   					$res[] = $row;
+   				}
+			}
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $res;
+
+
+	}
+
+
+
 
 	public function placeOrder($userId, $deliveryTime, $deliveryDate, $specs) {
 		$sql  = "insert into orders (customerName, createdTime, createdDate, deliveryDate, deliveryTime)".
@@ -170,7 +193,7 @@ class Database {
 				$orderId = $this->conn->lastInsertId();
 
 				$confirmation=array($orderId);
-
+				$this->createStatusEvent($orderId, 'Recieved');
 				$i=0;
 				foreach($specs as $orderSpec) {
 					if ($orderSpec[1]>0) {
@@ -188,6 +211,24 @@ class Database {
 			die($error);
 		}	
 		return $confirmation;
+
+	}
+
+	public function createStatusEvent($orderId, $status) {
+		$sql = "INSERT INTO orderStatusEvent(orderId, statusName) VALUES ('$orderId', '$status')";
+
+		try {	
+			$rowChange = $this->executeUpdate($sql);
+			if ($rowChange == 1) {
+				return true;
+			}
+		}
+		catch (PDOException $e) {
+			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+
+		return false;
 
 	}
 
@@ -562,7 +603,7 @@ class Database {
 	}
 
 	public function getAllPallets() {
-		$sql = "select * from pallet";
+		$sql = "select * from pallet where id not in (select palletId from orderPallet join orderStatusEvent where statusName = 'Delivered')";
 		try {
 			$result = $this->executeQuery($sql);
 			$res = array();
@@ -577,11 +618,32 @@ class Database {
 		}
 
 		return $res;
+	}
 
+	public function getAllpRep() {
+		$sql = "select recipeName from pallet where". 
+		" id not in (select palletId from orderPallet join orderStatusEvent where".
+		" statusName = 'Delivered') group by recipeName";
+		try {
+			$result = $this->executeQuery($sql);
+			$res = array();
+			if($result) {
+   				foreach ($result as $row) {
+   					$res[] = $row;
+   				}
+			}
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $res;
 
 	}
+
+
 	public function getRecipePallet($recipe) {
-		$sql = "select * from pallet where recipeName = '$recipe'";
+		$sql = "select * from pallet where recipeName = '$recipe' and". 
+		" id not in (select palletId from orderPallet join orderStatusEvent where statusName = 'Delivered')";
 		try {
 			$result = $this->executeQuery($sql);
 			$res = array();
@@ -597,7 +659,8 @@ class Database {
 		return $res;
 	}
 		public function getBarcodePallet($barcodeId) {
-		$sql = "select * from pallet where barcodeId = '$barcodeId'";
+		$sql = "select * from pallet where barcodeId = '$barcodeId' and id not in (select".
+		" palletId from orderPallet join orderStatusEvent where statusName = 'Delivered')";
 		try {
 			$result = $this->executeQuery($sql);
 			$res = array();
@@ -614,7 +677,8 @@ class Database {
 	}
 
 	public function getPalletBetween($start, $end) {
-		$sql = "select * from pallet where createdDate between '$start' and '$end'";
+		$sql = "select * from pallet where createdDate between '$start' and '$end' and".
+		" id not in (select palletId from orderPallet join orderStatusEvent where statusName = 'Delivered')";
 		try {
 			$result = $this->executeQuery($sql);
 			$res = array();
@@ -631,7 +695,9 @@ class Database {
 	}
 
 		public function getPalletBetweenRecipe($recipe, $start, $end) {
-		$sql = "select * from pallet where createdDate between '$start' and '$end' and recipeName = '$recipe'";
+		$sql = "select * from pallet where createdDate between '$start' and '$end' and".
+		" recipeName = '$recipe' and id not in (select palletId from orderPallet join".
+		" orderStatusEvent where statusName = 'Delivered')";
 		try {
 			$result = $this->executeQuery($sql);
 			$res = array();
@@ -696,8 +762,230 @@ class Database {
 		}
 		return false;
 	}
+	
+
+	public function getPalletsNotBlocked() {
+
+		$sql = "select recipeName, count(*) as number from pallet where blocked = false and id not in (select palletId from orderPallet) group by recipeName";
+		try {
+			$result = $this->executeQuery($sql);
+			$res = array();
+			if($result) {
+   				foreach ($result as $row) {
+   					$res[] = $row;
+   				}
+			}
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $res;
+	}
+
+	public function getOrders() {
+		$sql = "select o.id, customerName, deliveryDate, createdDate, statusName from orders o".
+		", orderStatusEvent e where o.id = e.orderId and e.statusName != 'Delivered';";
+		try {
+			$result = $this->executeQuery($sql);
+			$res = array();
+			if($result) {
+   				foreach ($result as $row) {
+   				$res[] = $row;
+   				}
+			}
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $res;
+	}
+
+	public function getSpec($orderId) {
+
+		$sql = "select customerName, recipeName, quantity from".
+		 " orderSpec s, orders o where s.orderId = o.id and o.id ='$orderId';";
+		try {
+			$result = $this->executeQuery($sql);
+			$res = array();
+			if($result) {
+   				foreach ($result as $row) {
+   					$res[] = $row;
+   				}
+			}
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $res;
+	}
 
 
+	public function loadTruck($orderId, $recipeName) {
+		$left = $this->checkNbrPallets($orderId);
+		if($left){
+			$sql = "insert into orderPallet(palletId, orderId) (select id as palletId".
+			", '$orderId' as orderId from pallet p where recipeName = '$recipeName'".
+			" and p.id not in (select palletId from orderPallet) and blocked = false limit 1);";
+
+			try {	
+				$rowChange = $this->executeUpdate($sql);
+				if ($rowChange > 0) {
+					return true;
+				} 
+			} catch (PDOException $e) {			
+				$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+				die($error);
+			}
+		}
+		return false;	
+	}
+
+
+	public function initiateLoad($orderId, $stat) {
+		if($this->checkNbrPallets($orderId)) {
+			$sql = "select recipeName, quantity from orderSpec where orderId = '$orderId'";
+			try {
+			$result = $this->executeQuery($sql);
+			$res = array();
+			if($result) {
+   				foreach ($result as $row) {
+   					for($i = 0; $i < $row['quantity']; $i++) {
+   						if($this->loadTruck($orderId, $row['recipeName']) == false) {
+   							return false;
+   						}
+   					}
+   					
+   				}
+			} else {
+				return false;
+			}
+
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+
+	$this->changeStat($orderId, $stat);
+		return true;
+	}
+		return false;
+	}
+
+	public function changeStat($orderId, $stat) {
+		$sql = "update orderStatusEvent set statusName = '$stat' where orderId = '$orderId'";
+		try {	
+				$rowChange = $this->executeUpdate($sql);
+				if ($rowChange > 0) {
+
+					return true;
+				} 
+			} catch (PDOException $e) {			
+				$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+				die($error);
+			}
+		return false;	
+	}
+
+
+	public function checkNbrPallets($orderId) {
+		$sql = "select p.recipeName, count(*) - quantity as remaining from".
+		" pallet p, orderspec o where o.orderId = '$orderId'".
+		" and p.recipeName = o.recipeName and p.id not in (select palletId from orderPallet)".
+		" and p.blocked = false group by p.recipeName;";
+			try {
+
+			$result = $this->executeQuery($sql);
+			$res = array();
+			if(!$result) {
+   				return false;
+			}
+
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+
+		return $this->checkStatus($orderId);
+	}
+
+	public function checkStatus($orderId) {
+		$sql = "select statusName from orderStatusEvent where orderId = '$orderId'";
+
+		try {
+			$result = $this->executeQuery($sql);
+			$res = array();
+			if($result) {
+   				foreach ($result as $row) {
+   					if($row['statusName'] == 'Delivered') {
+   						return false;
+   					}
+   				}
+			}
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+
+		return true;
+
+
+	}
+
+	public function getAllOrders() {
+		$sql = "select o.id as id, customerName, deliveryDate, deliveryTime, statusName from orders o".
+		", orderStatusEvent e where o.id = e.orderId;";
+		try {
+			$result = $this->executeQuery($sql);
+			$res = array();
+			if($result) {
+   				foreach ($result as $row) {
+   				$res[] = $row;
+   				}
+			}
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $res;
+	}
+
+	public function removeOrder($orderId) {
+
+		$sql = "Delete from orders where id = '$orderId' ";
+
+		try {	
+				$rowChange = $this->executeUpdate($sql);
+				if ($rowChange == 1) {
+					return true;
+				} 
+			} catch (PDOException $e) {			
+				$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+				die($error);
+			}
+		return false;	
+	}
+
+	public function palletAction($id, $action) {
+		if($action == 'Block') {
+			$actions = 1;
+		} else {
+			$actions = 0;
+		}
+		
+		$sql = "update pallet set blocked = $actions where id = '$id'";
+		try {	
+				$rowChange = $this->executeUpdate($sql);
+				if ($rowChange == 1) {
+					return true;
+				} 
+			} catch (PDOException $e) {			
+				$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+				die($error);
+			}
+		return false;	
+
+
+	}
 
 
 
