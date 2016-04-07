@@ -19,9 +19,7 @@
 <body>
 
 <h1 align="center">New User</h1>
-<p> 
-Current user: <?php print $userId ?>
-<p>
+
 <p>
 
 
@@ -51,7 +49,7 @@ Current user: <?php print $userId ?>
 
     <p>
 
-If new Customer user is selected please select company for this user
+If new Customer user is selected please select company you represent
 <p>    
 
 
