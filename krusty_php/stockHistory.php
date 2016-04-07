@@ -41,7 +41,7 @@
 <input placeholder="End date" name="endDate" type="text" onfocus="(this.type='date')"  value ="<?php echo $endDate; ?>">
 <input type=submit value="check" >
 </form>
-<h3> Delivers <h3>
+<h3> Delivered Rawmaterials <h3>
     <table id="rawMaterialTable" style="border-spacing: 20px">
       <tr>
         <td style="background-color: #FFF"><b>Raw material</b></td>
@@ -65,7 +65,7 @@
     <p>
     <p>
 
-    <h3> Orders <h3>
+    <h3> Rawmaterials used in pallets <h3>
     <table id="rawMaterialTable" style="border-spacing: 20px">
       <tr>
         <td style="background-color: #FFF"><b>Raw material</b></td>
