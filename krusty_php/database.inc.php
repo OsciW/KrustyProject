@@ -932,7 +932,7 @@ class Database {
 	}
 
 	public function getAllOrders() {
-		$sql = "select o.id as id, customerName, deliveryDate, deliveryTime, statusName from orders o".
+		$sql = "select o.id as id, customerName, deliveryDate, createdDate, statusName from orders o".
 		", orderStatusEvent e where o.id = e.orderId;";
 		try {
 			$result = $this->executeQuery($sql);
@@ -983,6 +983,29 @@ class Database {
 				die($error);
 			}
 		return false;	
+
+
+	}
+
+	public function getPalletOrders() {
+		$sql = "select p.id as palletId, p.createdDate, p.recipeName, o.id as orderId, o.customerName, o.deliveryDate".
+		" from pallet p, orders o, orderPallet op where p.id in (select palletId from orderPallet) and".
+		" op.orderId = o.id group by p.id;";
+
+		try {
+			$result = $this->executeQuery($sql);
+			$res = array();
+			if($result) {
+   				foreach ($result as $row) {
+   				$res[] = $row;
+   				}
+			}
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $res;
+
 
 
 	}
