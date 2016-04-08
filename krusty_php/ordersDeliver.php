@@ -88,7 +88,7 @@
         <td style="background-color: #FFF"><b>Details</b></td>
         
 
-  		<td style="background-color: #FFF"><b></b></td> 
+  		<td style="background-color: #FFF"><b>Change status</b></td> 
       <td style="background-color: #FFF"><b></b></td> 
       <td style="background-color: #FFF"><b></b></td>
 
