@@ -161,7 +161,7 @@ INSERT INTO users(pNbr, name, type) VALUES
 ('911010104', 'Katarina', 'Customer'),
 ('911010112', 'Marie', 'Customer'),
 ('911010131', 'Albert', 'Customer'),
-('910328233', 'Cleas', 'Production'),
+('910328233', 'Claes', 'Production'),
 ('011101231','Per', 'StockManager' ),
 ('421101241', 'Henrik', 'OrdersDelivers'),
 ('550505155', 'Bosse', 'superUser');
