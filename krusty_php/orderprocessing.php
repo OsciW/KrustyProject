@@ -33,19 +33,19 @@
 	}
 
 
-	/*if($no_cookies==0) {
+	if($no_cookies==0) {
 		header("Location: errorOrder.php");
-	}*/
+	}
 
 	$db->openConnection();
 
 	$orderSpec=$db->placeOrder($customerName, $time, $date, $specs);
   	$db->closeConnection();
 
-  	/*if($orderSpec[0] == NULL){
+  	if($orderSpec[0] == NULL){
   	
   		header("Location: errorOrder.php");
-  	}*/
+  	}
 
 
   	echo 'Order confirmation </br></br>';
