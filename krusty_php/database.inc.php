@@ -990,7 +990,30 @@ class Database {
 	public function getPalletOrders() {
 		$sql = "select p.id as palletId, p.createdDate, p.recipeName, o.id as orderId, o.customerName, o.deliveryDate".
 		" from pallet p, orders o, orderPallet op where p.id in (select palletId from orderPallet) and".
-		" op.orderId = o.id group by p.id;";
+		" op.orderId = o.id and op.palletId = p.id;";
+
+		try {
+			$result = $this->executeQuery($sql);
+			$res = array();
+			if($result) {
+   				foreach ($result as $row) {
+   				$res[] = $row;
+   				}
+			}
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $res;
+
+
+
+	}
+
+	public function getPalletOrdersForC($customerName) {
+		$sql = "select p.id as palletId, p.createdDate, p.recipeName, o.id as orderId, o.customerName, o.deliveryDate".
+		" from pallet p, orders o, orderPallet op where p.id in (select palletId from orderPallet) and".
+		" op.orderId = o.id and o.customerName = '$customerName' and op.palletId = p.id;";
 
 		try {
 			$result = $this->executeQuery($sql);
