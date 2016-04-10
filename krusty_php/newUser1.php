@@ -9,10 +9,11 @@
 	$customer = $_REQUEST['customer'];
 
 	$db->openConnection();
+	$created = $db->createUser($userName, $userType, $userId);
 	if($userType == 'Customer') {
 		$db->createCustUse($userId,$customer);
 	} 
-	$created = $db->createUser($userName, $userType, $userId);
+	
 	$db->closeConnection();
 
 ?>

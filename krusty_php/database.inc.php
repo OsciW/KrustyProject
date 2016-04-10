@@ -790,6 +790,28 @@ class Database {
 		try {	
 			$rowChange = $this->executeUpdate($sql);
 			if ($rowChange == 1) {
+				echo "skapades";
+				return true;
+			} else {
+				return false;
+			}
+		} catch (PDOException $e) {			
+			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return false;
+	}
+
+	public function createCustomer($name, $address, $tele) {
+		if($tele) {
+			$sql = "Insert into Customer(name, address, telephone) values ('$name', '$address', '$tele');";
+		} else {
+			$sql = "Insert into customer(name, address) values ('$name', '$address');";
+		}
+
+		try {	
+			$rowChange = $this->executeUpdate($sql);
+			if ($rowChange == 1) {
 				return true;
 			} else {
 				return false;

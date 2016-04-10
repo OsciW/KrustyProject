@@ -280,6 +280,100 @@ INSERT INTO pallet(barcodeId, createdTime, createdDate, blocked, recipeName) VAL
 (23, curtime(), curdate(), false, 'Tango');
 
 
+INSERT INTO orders(customerName, createdTime, createdDate, deliveryDate, deliveryTime) VALUES
+('Kalaskakor AB', '12:00:00', '2016-01-01', '2016-04-11', '16:00:00'),
+('Finkakor AB', '12:00:00', '2016-01-01', '2016-04-11', '16:00:00'),
+('Partkakor AB', '12:00:00', '2016-01-01', '2016-04-11', '16:00:00'),
+('Bjudkakor AB', '12:00:00', '2016-01-01', '2016-04-11', '16:00:00'),
+('Gästkakor AB', '12:00:00', '2016-01-01', '2016-04-11', '16:00:00'),
+('Skånekakor AB', '12:00:00', '2016-01-01', '2016-04-11', '16:00:00'),
+('Kalaskakor AB', '12:00:00', '2016-01-01', '2016-04-11', '16:00:00'),
+('Finkakor AB', '12:00:00', '2016-01-02', '2016-04-12', '16:00:00'),
+('Partkakor AB', '12:00:00', '2016-01-02', '2016-04-12', '16:00:00'),
+('Bjudkakor AB', '12:00:00', '2016-01-02', '2016-04-12', '16:00:00'),
+('Gästkakor AB', '12:00:00', '2016-01-02', '2016-04-12', '16:00:00'),
+('Skånekakor AB', '12:00:00', '2016-01-02', '2016-04-12', '16:00:00'),
+('Kalaskakor AB', '12:00:00', '2016-01-02', '2016-04-12', '16:00:00'),
+('Finkakor AB', '12:00:00', '2016-01-03', '2016-04-13', '16:00:00'),
+('Partkakor AB', '12:00:00', '2016-01-03', '2016-04-13', '16:00:00'),
+('Bjudkakor AB', '12:00:00', '2016-01-03', '2016-04-13', '16:00:00'),
+('Gästkakor AB', '12:00:00', '2016-01-03', '2016-04-13', '16:00:00'),
+('Skånekakor AB', '12:00:00', '2016-01-03', '2016-04-13', '16:00:00');
+
+
+ INSERT INTO OrderStatusEvent(orderId, statusName) VALUES 
+ (1, 'Recieved'),
+ (2, 'Recieved'),
+ (3, 'Recieved'),
+ (4, 'Recieved'),
+ (5, 'Recieved'),
+ (6, 'Recieved'),
+ (7, 'Canceled'),
+ (8, 'Canceled'),
+ (9, 'Canceled'),
+ (10, 'Canceled'),
+ (11, 'Canceled'),
+ (12, 'Canceled'),
+ (13, 'Delivered'),
+ (14, 'Delivered'),
+ (15, 'Delivered'),
+ (16, 'Delivered'),
+ (17, 'Delivered'),
+ (18, 'Delivered');
+
+
+ INSERT INTO orderPallet(palletId, orderId) VALUES
+ (1,13),
+ (2,14),
+ (3,15),
+ (4,16),
+ (5,17),
+ (6,18);
+
+
+ INSERT INTO OrderSpec(orderId, recipeName, quantity) VALUES
+ (1, 'Tango', 1),
+ (2, 'Amneris', 1),
+ (3, 'Almond delight', 1),
+ (4, 'Nut cookie', 1),
+ (5, 'Berliner', 1),
+ (6, 'Nut ring', 1),
+ (7, 'Tango', 1),
+ (8, 'Amneris', 1),
+ (9, 'Almond delight', 1),
+ (10, 'Nut cookie', 1),
+ (11, 'Berliner', 1),
+ (12, 'Nut ring', 1),
+ (2, 'Tango', 1),
+ (3, 'Amneris', 1),
+ (4, 'Almond delight', 1),
+ (5, 'Nut cookie', 1),
+ (6, 'Berliner', 1),
+ (7, 'Nut ring', 1),
+ (8, 'Tango', 1),
+ (9, 'Amneris', 1),
+ (10, 'Almond delight', 1),
+ (11, 'Nut cookie', 1),
+ (12, 'Berliner', 1),
+ (1, 'Nut ring', 1),
+ (3, 'Tango', 1),
+ (4, 'Amneris', 1),
+ (5, 'Almond delight', 1),
+ (6, 'Nut cookie', 1),
+ (7, 'Berliner', 1),
+ (8, 'Nut ring', 1),
+ (9, 'Tango', 1),
+ (10, 'Amneris', 1),
+ (11, 'Almond delight', 1),
+ (12, 'Nut cookie', 1),
+ (1, 'Berliner', 1),
+ (2, 'Nut ring', 1);
+
+
+
+
+
+
 commit;
 
 
