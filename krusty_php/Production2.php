@@ -44,7 +44,7 @@ print "Current user:   $userId <br/>\n";
 	print "Pallet Id:   $resNbr ";
 } else {
 
-	print "Not enough rawmaterials, fill stocks first";
+	print "Make sure to fill in fields properly, otherwise rawmaterials might be low";
 }
  ?>
  <form method=get action="production1.php">
