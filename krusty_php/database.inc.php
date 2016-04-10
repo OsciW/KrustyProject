@@ -405,6 +405,28 @@ class Database {
 		return $res;
 	}
 
+	public function getAllIngredientsRecipe($recipeName) {
+		$sql = "select distinct name, quantity from rawmaterial r ;";
+
+		try {
+			$res = array();
+			$result = $this->executeQuery($sql);
+			if($result) {
+				foreach($result as $row) {
+					$res[] = $row['name'];
+				}
+			}
+
+		} catch(PDOException $e) {
+			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $res;
+	}
+
+
+
+
 	public function addRecipe($name) {
 		$sql = "insert into Recipe(name) VALUES ('$name');";
 		try {	
@@ -436,6 +458,22 @@ class Database {
 			die($error);
 		}
 		return $idNbr;
+	}
+
+
+
+	public function deleteOldIngredients($recipe) {
+		$sql = "delete from ingredient where recipeName ='$recipe'; ";
+		try {	
+			$rowChange = $this->executeUpdate($sql);
+			if ($rowChange > 0) {
+				return true;
+			}
+		} catch (PDOException $e) {			
+			$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return false;
 	}
 
 	public function deleteRecipe($recipe) {

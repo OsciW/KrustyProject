@@ -10,6 +10,7 @@
 
 	$db->openConnection();
   $Ingredients = $db->getIngredients($recipe);
+  $_SESSION['Ingredients'] = $Ingredients;
   $db->closeConnection();
 ?>
 
@@ -43,6 +44,10 @@
 
     <p>
     <p>
+
+       <form method=get action="updateRecipe.php">
+      <input type=submit value="Update Recipe" >
+    </form>
 
     <form method=get action="deletedRecipe.php">
       <input type=submit value="Delete" >

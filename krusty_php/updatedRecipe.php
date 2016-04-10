@@ -5,11 +5,11 @@
 	$db = $_SESSION['db'];
 	$userId = $_SESSION['userId'];
 	$userType = $_SESSION['userType'];
-	$recipe = $_REQUEST['recipeName'];
+	$recipe = $_SESSION['recipe'];
 
 	$db->openConnection();
+  $deleted = $db->deleteOldIngredients($recipe);
 	$ingredients = $db->getAllIngredients();
-	$db->addRecipe($recipe);
 	$db->closeConnection();
 
 ?>
@@ -25,9 +25,9 @@
 
   <?php
 
-    if ($recipe != "") {
+    if ($deleted) {
  ?>
-  	<h1 align="center">Production Testing page 2 </h1>
+  	<h1 align="center">Updated Recipe </h1>
 <p> 
 Current user: <?php print $userId ?>
 <p>
@@ -69,9 +69,7 @@ Recipe: <?php print $recipe ?>
 
 		}
   
-	} else {
-
-?>
+	} else { ?>
 
 Don't forget to write recipe name and an ingredient
 <?php
@@ -84,7 +82,7 @@ Don't forget to write recipe name and an ingredient
 </table>
 
 
-<form method=get action="createRecipe.php">
+<form method=get action="stocks.php">
     <input type=submit value="back" >
   </form>
 
