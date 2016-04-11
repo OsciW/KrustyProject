@@ -39,7 +39,7 @@
 
 <p>
   <form method=get action="index.html">
-    <input type=submit value="log out" >
+    <input type=submit value="Back" >
   </form>
 
 </body>
