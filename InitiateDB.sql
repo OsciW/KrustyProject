@@ -77,7 +77,7 @@ CREATE TABLE Pallet(
 	createdDate date NOT NULL,
 	blocked boolean default false,
 	recipeName varchar(30) NOT NULL,
-	FOREIGN KEY(recipeName) REFERENCES Recipe(name)
+	FOREIGN KEY(recipeName) REFERENCES Recipe(name) ON DELETE CASCADE
 );
 
 CREATE TABLE OrderSpec(
@@ -85,7 +85,7 @@ CREATE TABLE OrderSpec(
 	orderId int NOT NULL,
 	recipeName varchar(30) NOT NULL,
 	quantity int NOT NULL,
-	FOREIGN KEY(recipeName) REFERENCES Recipe(name),
+	FOREIGN KEY(recipeName) REFERENCES Recipe(name) ON DELETE CASCADE,
 	FOREIGN KEY(orderId) REFERENCES Orders(id) ON DELETE CASCADE,
 	CONSTRAINT cons UNIQUE (recipeName, orderId)
  );
