@@ -480,7 +480,7 @@ class Database {
 		$sql = "delete from recipe where name = '$recipe';";
 		try {	
 			$rowChange = $this->executeUpdate($sql);
-			if ($rowChange == 1) {
+			if ($rowChange > 0) {
 				$idNbr = $this->conn->lastInsertId();
 			}
 		} catch (PDOException $e) {			
@@ -987,8 +987,6 @@ class Database {
 		}
 
 		return true;
-
-
 	}
 
 	public function getAllOrders() {
@@ -1009,6 +1007,7 @@ class Database {
 		return $res;
 	}
 
+
 	public function removeOrder($orderId) {
 
 		$sql = "Delete from orders where id = '$orderId' ";
@@ -1024,6 +1023,7 @@ class Database {
 			}
 		return false;	
 	}
+
 
 	public function palletAction($id, $action) {
 		if($action == 'Block') {
@@ -1043,8 +1043,6 @@ class Database {
 				die($error);
 			}
 		return false;	
-
-
 	}
 
 	public function getPalletOrders() {
@@ -1065,9 +1063,6 @@ class Database {
 			die($error);
 		}
 		return $res;
-
-
-
 	}
 
 	public function getPalletOrdersForC($customerName) {
@@ -1089,11 +1084,6 @@ class Database {
 		}
 		return $res;
 
-
-
 	}
-
-
-
 }
 ?>
