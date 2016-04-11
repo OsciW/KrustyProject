@@ -7,6 +7,10 @@
 	$userType = $_SESSION['userType'];
 	$orderId = $_GET['orderId'];
   $action = $_GET['action'];
+
+  $start=$_GET['startDate'];
+  $end=$_GET['endDate'];
+
 	$db->openConnection();
   if($action == 'Delivered') {
     $Delivered = $db->initiateLoad($orderId, $action);
@@ -18,9 +22,15 @@
 
   }
 
+  if ($start<$end && $start != null && $end != null) {
+    $orders = $db->getOrdersInInterval($start, $end);
+  }
+  else {
+    $orders = $db->getOrders();
+  }
+
 	$pallets = $db->getPalletsNotBlocked();
 
-	$orders = $db->getOrders();
 
 	$db->closeConnection();
   header( "ordersDeliver.php");
@@ -76,6 +86,19 @@
 
 
     <h3> Orders to be Delivered </h3>
+
+        <body> 
+
+    <form method get action "ordersDeliver.php">
+
+    <input placeholder="Start date" name="startDate" type="text" onfocus="(this.type='date')"  value ="<?php echo $startDate; ?>">
+    <input placeholder="End date" name="endDate" type="text" onfocus="(this.type='date')"  value ="<?php echo $endDate; ?>">
+
+    <input type=submit value="check" >
+
+    </form>
+
+        </body>
 
     <table id="orderTable" style="border-spacing: 20px">
       <tr>

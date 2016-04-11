@@ -480,7 +480,7 @@ class Database {
 		$sql = "delete from recipe where name = '$recipe';";
 		try {	
 			$rowChange = $this->executeUpdate($sql);
-			if ($rowChange > 0) {
+			if ($rowChange == 1) {
 				$idNbr = $this->conn->lastInsertId();
 			}
 		} catch (PDOException $e) {			
@@ -784,13 +784,16 @@ class Database {
 		return false;
 	}
 
-	public function createCustUse($pNbr, $name) {
-		$sql = "Insert into custUser(pNbr, name)".
-		"values ('$pNbr', '$name')";
+	public function createCustomer($name, $address, $tele) {
+		if($tele) {
+			$sql = "Insert into Customer(name, address, telephone) values ('$name', '$address', '$tele');";
+		} else {
+			$sql = "Insert into customer(name, address) values ('$name', '$address');";
+		}
+
 		try {	
 			$rowChange = $this->executeUpdate($sql);
 			if ($rowChange == 1) {
-				echo "skapades";
 				return true;
 			} else {
 				return false;
@@ -802,13 +805,9 @@ class Database {
 		return false;
 	}
 
-	public function createCustomer($name, $address, $tele) {
-		if($tele) {
-			$sql = "Insert into Customer(name, address, telephone) values ('$name', '$address', '$tele');";
-		} else {
-			$sql = "Insert into customer(name, address) values ('$name', '$address');";
-		}
-
+	public function createCustUse($pNbr, $name) {
+		$sql = "Insert into custUser(pNbr, name)".
+		"values ('$pNbr', '$name')";
 		try {	
 			$rowChange = $this->executeUpdate($sql);
 			if ($rowChange == 1) {
@@ -987,6 +986,8 @@ class Database {
 		}
 
 		return true;
+
+
 	}
 
 	public function getAllOrders() {
@@ -1007,7 +1008,6 @@ class Database {
 		return $res;
 	}
 
-
 	public function removeOrder($orderId) {
 
 		$sql = "Delete from orders where id = '$orderId' ";
@@ -1023,7 +1023,6 @@ class Database {
 			}
 		return false;	
 	}
-
 
 	public function palletAction($id, $action) {
 		if($action == 'Block') {
@@ -1043,6 +1042,8 @@ class Database {
 				die($error);
 			}
 		return false;	
+
+
 	}
 
 	public function getPalletOrders() {
@@ -1063,6 +1064,9 @@ class Database {
 			die($error);
 		}
 		return $res;
+
+
+
 	}
 
 	public function getPalletOrdersForC($customerName) {
@@ -1084,6 +1088,28 @@ class Database {
 		}
 		return $res;
 
+
+
 	}
+
+	public function getOrdersInInterval($start, $end){
+		$sql = "select o.id, customerName, deliveryDate, createdDate, statusName from orders o".
+		", orderStatusEvent e where o.id = e.orderId and e.statusName != 'Delivered' and deliveryDate>='$start' and deliveryDate<='$end';";
+		try {
+			$result = $this->executeQuery($sql);
+			$res = array();
+			if($result) {
+   				foreach ($result as $row) {
+   				$res[] = $row;
+   				}
+			}
+		} catch(PDOException $e) {
+		$error = "*** Internal error: " . $e->getMessage() . "<p>" . $query;
+			die($error);
+		}
+		return $res;
+
+	}
+
 }
 ?>
